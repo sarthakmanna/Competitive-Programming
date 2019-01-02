@@ -117,6 +117,8 @@ class SegmentTree<T, U> {
     }
 
     void rangeUpdate(int l, int r, U updateValue) {
+        if (l > r) return;
+        
         stack.clear();
         stack.push(tree[0]);
 
@@ -143,6 +145,8 @@ class SegmentTree<T, U> {
 
     T rangeQuery(int l, int r, U key) {
         T retVal = (T) Node.defaultValue;
+        if (l > r) return retVal;
+        
         stack.clear();
         stack.push(tree[0]);
 
