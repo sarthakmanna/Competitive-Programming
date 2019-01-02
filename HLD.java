@@ -1,23 +1,29 @@
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Stack;
+import java.util.Collections;
 
 class HLD_LCA
 {
+    static final int MAXN = 1000_006;
     ArrayList<Integer>[] graph;
     int[] depth, parent, chCount;
     int nodes, root;
+    long[] weight;
 
-    SegmentTree st;
+    SegmentTree<Long, Long> st;
     int[] treePos, linearTree, segRoot;
 
-    HLD_LCA(ArrayList<Integer>[] g, int[] dep, int[] par, int[] ch, int n, int r)
+    HLD_LCA(ArrayList<Integer>[] g, int[] dep, int[] par, int[] ch,
+            int n, int r, long[] wt)
     {
         graph = g;  depth = dep;    parent = par;   chCount = ch;
-        nodes = n;  root = r;
+        nodes = n;  root = r;       weight = wt;
 
-        st = new SegmentTree();
         HLDify();
+    }
+
+    static Long operate(Long a, Long b) {
+        return Math.max(a, b);
     }
 
     private void HLDify()
@@ -28,6 +34,7 @@ class HLD_LCA
         segRoot = new int[nodes];
 
         Stack<Integer> stack = new Stack<>();
+        stack.ensureCapacity(MAXN);
         stack.push(root);
         for (i = 0; !stack.isEmpty(); ++i)
         {
@@ -37,18 +44,22 @@ class HLD_LCA
             linearTree[i] = node;
             treePos[node] = i;
             segRoot[node] = treeRoot;
-            
+
             Collections.sort(graph[node], (Integer a, Integer b) -> Integer.compare(chCount[a], chCount[b]));
             for (int itr : graph[node])
                 if(parent[node] != itr)
                     stack.push(itr);
         }
-        st.segmentify(linearTree);
+
+        Long[] respectiveWeights = new Long[nodes];
+        for (i = 0; i < nodes; ++i)
+            respectiveWeights[i] = weight[linearTree[i]];
+        st = new SegmentTree<>(respectiveWeights);
     }
-    
-    long pathQuery(int node1, int node2)
+
+    long pathQuery(int node1, int node2, Long key)
     {
-        long ret = st.dummyNode, temp;
+        long ret = Node.defaultValue, temp;
         while (segRoot[node1] != segRoot[node2])
         {
             if (depth[segRoot[node1]] > depth[segRoot[node2]])
@@ -57,21 +68,21 @@ class HLD_LCA
                 node2 ^= node1;
                 node1 ^= node2;
             }
-        
-            temp = st.rangeQuery(treePos[segRoot[node2]], treePos[node2]);
-            ret = st.nodeToNode(ret, temp);
+
+            temp = st.rangeQuery(treePos[segRoot[node2]], treePos[node2], key);
+            ret = operate(ret, temp);
             node2 = parent[segRoot[node2]];
         }
-        
+
         if(treePos[node1] > treePos[node2])
         {
             node1 ^= node2;
             node2 ^= node1;
             node1 ^= node2;
         }
-        temp = st.rangeQuery(treePos[node1], treePos[node2]);   // ...treePos[node1] + 1... for Edge Query
-        ret = st.nodeToNode(ret, temp);
-        
+        temp = st.rangeQuery(treePos[node1], treePos[node2], key);   // ...treePos[node1] + 1... for Edge Query
+        ret = operate(ret, temp);
+
         return ret;
     }
     void pathUpdate(int node1, int node2, long value)
@@ -93,9 +104,9 @@ class HLD_LCA
             node2 ^= node1;
             node1 ^= node2;
         }
-        st.rangeUpdate(treePos[node1], treePos[node2], value);     // ...treePos[node1] + 1... for Edge Query
+        st.rangeUpdate(treePos[node1], treePos[node2], value);     // ...treePos[node1] + 1... for Edge Update
     }
-    
+
     int getLCA(int node1, int node2)
     {
         while (segRoot[node1] != segRoot[node2])
@@ -114,11 +125,11 @@ class HLD_LCA
     {
         if(depth[node] < targetDepth)
             return -7;
-        
+
         while (depth[segRoot[node]] > targetDepth)
             node = parent[segRoot[node]];
         node = linearTree[treePos[node] - depth[node] + targetDepth];
-        
+
         return node;
     }
 }
