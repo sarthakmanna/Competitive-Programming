@@ -1,7 +1,7 @@
 import java.io.*;
 import java.util.*;
 
-public class CP {
+class CP {
     public static void main(String[] args) {
         new Thread(null, new Runnable() {
             @Override
@@ -22,32 +22,12 @@ class Solver extends Thread {
     }
 
     static IO io = new IO(System.in);
-    static final long MOD = (long) (1e9 + 7);
-    static int N, K, D;
-    static long[][] dp;
 
     static void solve() throws Exception {
         int i, j, k;
+        for (int tc = io.nextInt(); tc > 0; --tc) {
 
-        N = io.nextInt(); K = io.nextInt(); D = io.nextInt();
-        dp = new long[N + 1][2];
-        dp[0][0] = 1;
-
-        for (i = 0; i < N; ++i) {
-            for (j = 1; j <= K && i + j <= N; ++j) {
-                if (j < D) {
-                    dp[i + j][0] += dp[i][0];
-                    dp[i + j][1] += dp[i][1];
-                } else {
-                    dp[i + j][1] += dp[i][0] + dp[i][1];
-                }
-                //dp[i + j][0] %= MOD;
-                //dp[i + j][1] %= MOD;
-            }
         }
-
-        io.println(dp[N][1] % MOD);
-
         io.flush();
     }
 }
