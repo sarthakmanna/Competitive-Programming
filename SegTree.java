@@ -57,7 +57,7 @@ class Node<T, U> {
         lazy = (U) newVal;
     }
 
-    int binarySearch(ArrayList<T> ar, int l, int r, U key) {
+    int binarySearch(ArrayList<U> ar, int l, int r, U key) {
         int mid; long k;
         for ( ; ; ) {
             mid = (l + r) >> 1;
