@@ -56,7 +56,6 @@ class Node<T, U> {
         lazy = (U) newVal;
     }
 
-    //In Java8: "error: incompatible types: T cannot be converted to long"
     int binarySearch(ArrayList<T> ar, int l, int r, T key) {
         int mid; long k;
         for ( ; ; ) {
