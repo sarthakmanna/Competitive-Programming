@@ -1,9 +1,8 @@
-import java.util.Stack;
-import java.util.ArrayList;
 
 class Node<T, U> {
     static int actualLength;
-    static final Long defaultValue = Long.MIN_VALUE, defaultLazy = 0l, defaultUpdate = 0l;
+    final T defaultValue = (T) (Long) Long.MIN_VALUE;
+    final U defaultLazy = (U) (Long) 0l, defaultUpdate = (U) (Long) 0l;
 
     final int index, leftBound, rightBound;
     T value;
@@ -14,45 +13,45 @@ class Node<T, U> {
     }
 
     T operate(T retVal, T key) {
-        Long v1 = value == null ? defaultValue : (Long) value;
-        Long v2 = retVal == null ? defaultValue : (Long) retVal;
+        Long v1 = (Long) (value == null ? defaultValue : value);
+        Long v2 = (Long) (retVal == null ? defaultValue : retVal);
         return (T) (v1 > v2 ? v1 : v2);
     }
 
     void node_node(Node<T, U> node) {
         if (!node.isValid()) return;
-        Long v1 = value == null ? defaultValue : (Long) value;
-        Long v2 = node.value == null ? defaultValue : (Long) node.value;
+        Long v1 = (Long) (value == null ? defaultValue : value);
+        Long v2 = (Long) (node.value == null ? defaultValue : node.value);
         value = (T) (v1 > v2 ? v1 : v2);
     }
 
     void lazy_lazy(Node<T, U> node) {
         if (!node.isValid()) return;
-        Long v1 = lazy == null ? defaultLazy : (Long) lazy;
-        Long v2 = node.lazy == null ? defaultLazy : (Long) node.lazy;
+        Long v1 = (Long) (lazy == null ? defaultLazy : lazy);
+        Long v2 = (Long) (node.lazy == null ? defaultLazy : node.lazy);
         lazy = (U) (v1 += v2);
     }
 
     void lazy_node() {
         int len = rightBound - leftBound + 1;
-        Long newVal = lazy == null ? defaultLazy : (Long) lazy;
+        Long newVal = (Long) (lazy == null ? defaultLazy : lazy);
         //newVal *= len;
-        newVal += value == null ? defaultValue : (Long) value;
+        newVal += (Long) (value == null ? defaultValue : value);
         value = (T) newVal;
         lazy = null;
     }
 
     void updateValue_node(int ql, int qr, U updateValue) {
         int l = Math.max(leftBound, ql), r = Math.min(rightBound, qr);
-        Long newVal = updateValue == null ? defaultUpdate : (Long) updateValue;
+        Long newVal = (Long) (updateValue == null ? defaultUpdate : updateValue);
         //newVal *= (r - l + 1);
-        newVal += value == null ? defaultValue : (Long) value;
+        newVal += (Long) (value == null ? defaultValue : value);
         value = (T) newVal;
     }
 
     void updateValue_lazy(int ql, int qr, U updateValue) {
-        Long newVal = updateValue == null ? defaultUpdate : (Long) updateValue;
-        newVal += lazy == null ? defaultLazy : (Long) lazy;
+        Long newVal = (Long) (updateValue == null ? defaultUpdate : updateValue);
+        newVal += (Long) (lazy == null ? defaultLazy : lazy);
         lazy = (U) newVal;
     }
 
@@ -118,7 +117,7 @@ class SegmentTree<T, U> {
 
     void rangeUpdate(int l, int r, U updateValue) {
         if (l > r) return;
-        
+
         stack.clear();
         stack.push(tree[0]);
 
@@ -144,9 +143,9 @@ class SegmentTree<T, U> {
     }
 
     T rangeQuery(int l, int r, T key) {
-        T retVal = (T) Node.defaultValue;
+        T retVal = tree[0].defaultValue;
         if (l > r) return retVal;
-        
+
         stack.clear();
         stack.push(tree[0]);
 
