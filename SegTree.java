@@ -1,3 +1,5 @@
+import java.util.ArrayList;
+import java.util.Stack;
 
 class Node<T, U> {
     static int actualLength;
@@ -12,7 +14,7 @@ class Node<T, U> {
         index = i; leftBound = l; rightBound = r;
     }
 
-    T operate(T retVal, T key) {
+    T operate(T retVal, U key) {
         Long v1 = (Long) (value == null ? defaultValue : value);
         Long v2 = (Long) (retVal == null ? defaultValue : retVal);
         return (T) (v1 > v2 ? v1 : v2);
@@ -55,7 +57,7 @@ class Node<T, U> {
         lazy = (U) newVal;
     }
 
-    int binarySearch(ArrayList<T> ar, int l, int r, T key) {
+    int binarySearch(ArrayList<T> ar, int l, int r, U key) {
         int mid; long k;
         for ( ; ; ) {
             mid = (l + r) >> 1;
@@ -142,7 +144,7 @@ class SegmentTree<T, U> {
         }
     }
 
-    T rangeQuery(int l, int r, T key) {
+    T rangeQuery(int l, int r, U key) {
         T retVal = tree[0].defaultValue;
         if (l > r) return retVal;
 
