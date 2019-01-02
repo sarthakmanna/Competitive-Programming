@@ -1,187 +1,171 @@
+import java.util.Stack;
+import java.util.ArrayList;
 
-import java.util.Arrays;
+class Node<T, U> {
+    static int actualLength;
+    final int index, leftBound, rightBound;
+    final long defaultValue, defaultLazy, defaultUpdate;
+    T value;
+    U lazy;
 
-class SegmentTree
-{
-    static final int MAXN = 100_005;
-    
-    void printTree()
-    {
-        for(int i=0;i<segTree.length;++i)
-        {
-            for(int j=0;j<segTree[i].length;++j)
-                System.out.print("("+segTree[i][j]+","+pending[i][j]+")  ");
-            System.out.println();
-        }
+    Node(int i, int l, int r) {
+        index = i; leftBound = l; rightBound = r;
+        defaultValue = Long.MIN_VALUE; defaultLazy = 0; defaultUpdate = 0;
     }
-    
-    final long dummyNode = Long.MAX_VALUE, dummyLazy = 0;
-    long nodeToNode(long a,long b)
-    {
-        return Math.min(a, b);
-    }
-    long lazyToLazy(long a,long b)
-    {
-        return a+b;
-    }
-    long lazyToNode(long segVal,long lazyVal, int i, int j)
-    {
-        /*
-        int ri = (1 << i) * j, rj = (1 << i) * (j + 1);
-        rj = Math.min(rj, segTree[0].length) - 1;
-        return segVal + lazyVal * (rj - ri + 1);
-        */
-        return segVal + lazyVal;
-    }
-    long valToLazy(long a)
-    {
-        return a;
-    }
-    long updValToNode(long segVal,long toAdd,int arI,int arJ,int ti,int tj)
-    {
-        /*
-        int ri=(1<<arI)*arJ, rj=(1<<arI)*(arJ+1)-1;
-        ri= Math.max(ri, ti);   rj=Math.min(rj, tj);
-        return segVal + toAdd*(rj-ri+1);
-        */
-        return segVal;
-    }
-    
-    long[][] segTree,pending;
-    void segmentify(long[] data)
-    {
-        int i,j;
-        i = clLog2(data.length) +1;
-        segTree = new long[i][];    pending = new long[i][];
-        
-        segTree[0] = new long[data.length];
-        System.arraycopy(data, 0, segTree[0], 0, data.length);
 
-        pending[0] = new long[data.length];
-        Arrays.fill(pending[0], dummyLazy);
-        
-        for(i=1; i<segTree.length; ++i)
-        {
-            j = (segTree[i-1].length + 1) >> 1;
-            segTree[i] = new long[j];
-            pending[i] = new long[j];   Arrays.fill(pending[i], dummyLazy);
-            
-            for(j=0; j<segTree[i].length; ++j)
-                fillTreeAt(i,j);
-        }
+    void node_node(Node<T, U> node) {
+        if (!node.isValid()) return;
+        Long v1 = value == null ? defaultValue : (Long) value;
+        Long v2 = node.value == null ? defaultValue : (Long) node.value;
+        value = (T) (v1 > v2 ? v1 : v2);
     }
-    void fillTreeAt(int i,int j)
-    {
-        pushUp(i-1,j<<1);
-        if((j<<1) +1 >= segTree[i-1].length)
-            segTree[i][j] = segTree[i-1][j<<1];
-        else
-        {
-            segTree[i][j] = nodeToNode(segTree[i-1][j<<1], segTree[i-1][(j<<1) +1]);
-            pushUp(i-1, (j<<1) +1);
-        }
-    }
-    void ptUpdate(int index,long val)
-    {
-        segTree[0][index]=val;
-        for(int i=1;i<segTree.length;++i)
-            fillTreeAt(i,index>>=1);
-    }
-    void pushUp(int i,int j)
-    {
-        if(pending[i][j] == dummyLazy)return;
-        segTree[i][j] = lazyToNode(segTree[i][j],pending[i][j], i, j);
-        int ch = j<<1, jk;
-        if(i>0)
-            for(jk=0;jk<2 && ch+jk<pending[i-1].length;++jk)
-                pending[i-1][ch+jk] = lazyToLazy(pending[i-1][ch+jk], pending[i][j]);
-        pending[i][j] = dummyLazy;
-    }
-    
-    int[][] stack=new int[2][MAXN];
-    long rangeQuery(int ti,int tj)
-    {
-        long ans = dummyNode;
 
-        if(ti > tj)
-            return ans;
+    void lazy_lazy(Node<T, U> node) {
+        if (!node.isValid()) return;
+        Long v1 = lazy == null ? defaultLazy : (Long) lazy;
+        Long v2 = node.lazy == null ? defaultLazy : (Long) node.lazy;
+        lazy = (U) (v1 += v2);
+    }
 
-        int top=0,p,q,i,j;
-        stack[0][top]=segTree.length-1; stack[1][top]=0;    ++top;
-        while(top>0)
-        {
-            --top;  
-            p = stack[0][top];  q = stack[1][top];
-            i = (1<<p)*q;       j = (1<<p)*(q+1) -1;
-            pushUp(p,q);
-            
-            if(ti > j || tj < i)continue;
-            if(ti <= i && tj >= j)
-                ans = nodeToNode(ans,segTree[p][q]);
-            else
-            {
-                --p;                    q<<=1;
-                stack[0][top] = p;      stack[1][top] = q;  ++top;
-                if(q+1 < segTree[p].length)
-                {
-                    stack[0][top] = p;  stack[1][top] = q+1;    ++top;
-                }
+    void lazy_node() {
+        int len = rightBound - leftBound + 1;
+        Long newVal = lazy == null ? defaultLazy : (Long) lazy;
+        //newVal *= len;
+        newVal += value == null ? defaultValue : (Long) value;
+        value = (T) newVal;
+        lazy = null;
+    }
+
+    void updateValue_node(int ql, int qr, U updateValue) {
+        int l = Math.max(leftBound, ql), r = Math.min(rightBound, qr);
+        Long newVal = updateValue == null ? defaultUpdate : (Long) updateValue;
+        //newVal *= (r - l + 1);
+        newVal += value == null ? defaultValue : (Long) value;
+        value = (T) newVal;
+    }
+
+    void updateValue_lazy(int ql, int qr, U updateValue) {
+        Long newVal = updateValue == null ? defaultUpdate : (Long) updateValue;
+        newVal += lazy == null ? defaultLazy : (Long) lazy;
+        lazy = (U) newVal;
+    }
+
+    void reset() { value = null; lazy = null; }
+
+    boolean isValid() { return leftBound <= rightBound; }
+
+    public String toString() {
+        return "(" + index + ". " + leftBound + "->" + rightBound + ") ["
+                + value + ", " + lazy + "]";
+    }
+}
+
+class SegmentTree<T, U> {
+    int N;
+    Node<T, U>[] tree;
+    Stack<Node> stack = new Stack<>();
+
+    SegmentTree (T[] ar) {
+        Node.actualLength = ar.length;
+
+        N = 1; while (N < ar.length) N <<= 1;
+        tree = new Node[(N << 1) - 1];
+        int step = N << 1, left = 0;
+        for (int i = 0, temp = 0; i < tree.length; ++i) {
+            if (Integer.bitCount(i) == temp) {
+                step >>= 1;
+                left = 0;
+                ++temp;
             }
+            tree[i] = new Node<>(i, left, Math.min(ar.length - 1, (left += step) - 1));
         }
-        return ans;
-    }
-    void rangeUpdate(int ti,int tj,long val)
-    {
-        if(ti > tj)
-            return;
 
-        int top=0,p,q,i,j;
-        stack[0][top]=segTree.length-1; stack[1][top]=0;    ++top;
-        while(top>0)
-        {
-            --top;  
-            p = stack[0][top];  q = stack[1][top];
-            i = (1<<p)*q;       j = (1<<p)*(q+1) -1;
-            pushUp(p,q);
-            
-            if(ti > j || tj < i)continue;
-            if(ti <= i && tj >= j)
-            {
-                pending[p][q] = lazyToLazy(pending[p][q], valToLazy(val));
-                pushUp(p,q);
-                int jk = p+1, ch = q;
-                for(;jk<segTree.length;++jk)
-                    fillTreeAt(jk,ch>>=1);
+        for (int i = 0; i < ar.length; ++i) tree[i + N - 1].value = ar[i];
+        for (int i = N - 2; i >= 0; --i) build(i);
+    }
+
+    void build(int i) {
+        pushDown(tree[(i << 1) + 1]);
+        pushDown(tree[(i << 1) + 2]);
+
+        tree[i].reset();
+        tree[i].node_node(tree[(i << 1) + 1]);
+        tree[i].node_node(tree[(i << 1) + 2]);
+    }
+
+    void rangeUpdate(int l, int r, U updateValue) {
+        stack.clear();
+        stack.push(tree[0]);
+
+        while (!stack.isEmpty()) {
+            Node<T, U> top = stack.pop();
+            pushDown(top);
+
+            if (!top.isValid() || top.leftBound > r || top.rightBound < l)
+                continue;
+            else if (top.leftBound >= l && top.rightBound <= r) {
+                top.updateValue_lazy(l, r, updateValue);
+
+                // Comment if bottom-up update is not required
+                for (int i = (top.index - 1) >> 1; i >= 0; i = (i - 1) >> 1)
+                    build(i);
             }
-            else
-            {
-                segTree[p][q] = updValToNode(segTree[p][q],val,p,q,ti,tj);
-                --p;                    q<<=1;
-                stack[0][top] = p;      stack[1][top] = q;  ++top;
-                if(q+1 < segTree[p].length)
-                {
-                    stack[0][top] = p;  stack[1][top] = q+1;    ++top;
-                }
+            else {
+                top.updateValue_node(l, r, updateValue);
+                stack.push(tree[(top.index << 1) + 1]);
+                stack.push(tree[(top.index << 1) + 2]);
             }
         }
     }
-    int clLog2(int num)
-    {
-        --num;
-        num |= num >> 1;
-        num |= num >> 2;
-        num |= num >> 4;
-        num |= num >> 8;
-        num |= num >> 16;
-        return Integer.bitCount(num);
+
+    T rangeQuery(int l, int r, U key) {
+        Node<T, U> retVal = new Node<>(-7, -7, -7);
+        stack.clear();
+        stack.push(tree[0]);
+
+        while (!stack.isEmpty()) {
+            Node<T, U> top = stack.pop();
+            pushDown(top);
+
+            if (!top.isValid() || top.leftBound > r || top.rightBound < l)
+                continue;
+            else if (top.leftBound >= l && top.rightBound <= r)
+                retVal.node_node(top);
+            else {
+                stack.push(tree[(top.index << 1) + 1]);
+                stack.push(tree[(top.index << 1) + 2]);
+            }
+        }
+        return retVal.value;
     }
-    int flLog2(int num)
-    {
-        num |= num >> 1;
-        num |= num >> 2;
-        num |= num >> 4;
-        num |= num >> 8;
-        num |= num >> 16;
-        return Integer.bitCount(num)-1;
+
+    void pushDown(Node<T, U> node) {
+        if (node.index < N - 1) {
+            tree[(node.index << 1) + 1].lazy_lazy(node);
+            tree[(node.index << 1) + 2].lazy_lazy(node);
+        }
+        node.lazy_node();
+    }
+
+    int binarySearch(ArrayList<T> ar, int l, int r, T key) {
+        int mid = (l + r) >> 1;
+        long k = (long) key;
+        if ((long) ar.get(l) > k) return l;
+        else if ((long) ar.get(r) <= k) return r + 1;
+        else if (l + 1 >= r) return r;
+        else if ((long) ar.get(mid) <= k) return binarySearch(ar, mid + 1, r, key);
+        else return binarySearch(ar, l, mid, key);
+    }
+
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0, temp = 0; i < tree.length; ++i) {
+            if (Integer.bitCount(i) == temp) {
+                sb.append("\n");
+                ++temp;
+            }
+            sb.append(tree[i]).append("; ");
+        }
+        return sb.append("\n\n").toString();
     }
 }
