@@ -15,7 +15,7 @@ class Node<T, U> {
 
     T operate(T retVal) {
         Long v1 = value == null ? defaultValue : (Long) value;
-        Long v2 = retVal == null ? defaultLazy : (Long) retVal;
+        Long v2 = retVal == null ? defaultValue : (Long) retVal;
         return (T) (v1 > v2 ? v1 : v2);
     }
 
