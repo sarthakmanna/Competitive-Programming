@@ -5,6 +5,7 @@ import java.util.Collections;
 class HLD_LCA
 {
     static final int MAXN = 1000_006;
+    static final long defaultValue = Long.MIN_VALUE;
     ArrayList<Integer>[] graph;
     int[] depth, parent, chCount;
     int nodes, root;
@@ -59,7 +60,7 @@ class HLD_LCA
 
     long pathQuery(int node1, int node2, Long key)
     {
-        long ret = Node.defaultValue, temp;
+        long ret = defaultValue, temp;
         while (segRoot[node1] != segRoot[node2])
         {
             if (depth[segRoot[node1]] > depth[segRoot[node2]])
