@@ -13,7 +13,7 @@ class Node<T, U> {
         index = i; leftBound = l; rightBound = r;
     }
 
-    T operate(T retVal) {
+    T operate(T retVal, T key) {
         Long v1 = value == null ? defaultValue : (Long) value;
         Long v2 = retVal == null ? defaultValue : (Long) retVal;
         return (T) (v1 > v2 ? v1 : v2);
@@ -143,7 +143,7 @@ class SegmentTree<T, U> {
         }
     }
 
-    T rangeQuery(int l, int r, U key) {
+    T rangeQuery(int l, int r, T key) {
         T retVal = (T) Node.defaultValue;
         if (l > r) return retVal;
         
@@ -157,7 +157,7 @@ class SegmentTree<T, U> {
             if (!top.isValid() || top.leftBound > r || top.rightBound < l)
                 continue;
             else if (top.leftBound >= l && top.rightBound <= r)
-                retVal = top.operate(retVal);
+                retVal = top.operate(retVal, key);
             else {
                 stack.push(tree[(top.index << 1) + 1]);
                 stack.push(tree[(top.index << 1) + 2]);
