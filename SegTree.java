@@ -3,14 +3,20 @@ import java.util.ArrayList;
 
 class Node<T, U> {
     static int actualLength;
+    static final Long defaultValue = Long.MIN_VALUE, defaultLazy = 0l, defaultUpdate = 0l;
+
     final int index, leftBound, rightBound;
-    final long defaultValue, defaultLazy, defaultUpdate;
     T value;
     U lazy;
 
     Node(int i, int l, int r) {
         index = i; leftBound = l; rightBound = r;
-        defaultValue = Long.MIN_VALUE; defaultLazy = 0; defaultUpdate = 0;
+    }
+
+    T operate(T retVal) {
+        Long v1 = value == null ? defaultValue : (Long) value;
+        Long v2 = retVal == null ? defaultLazy : (Long) retVal;
+        return (T) (v1 > v2 ? v1 : v2);
     }
 
     void node_node(Node<T, U> node) {
@@ -50,9 +56,24 @@ class Node<T, U> {
         lazy = (U) newVal;
     }
 
+    //In Java8: "error: incompatible types: T cannot be converted to long"
+    int binarySearch(ArrayList<T> ar, int l, int r, T key) {
+        int mid; long k;
+        for ( ; ; ) {
+            mid = (l + r) >> 1;
+            k = (Long) key;
+
+            if ((Long) ar.get(l) > k) return l;
+            else if ((Long) ar.get(r) <= k) return r + 1;
+            else if (l + 1 >= r) return r;
+            else if ((Long) ar.get(mid) <= k) l = mid + 1;
+            else r = mid;
+        }
+    }
+
     void reset() { value = null; lazy = null; }
 
-    boolean isValid() { return leftBound <= rightBound; }
+    boolean isValid() { return index < 0 || leftBound <= rightBound; }
 
     public String toString() {
         return "(" + index + ". " + leftBound + "->" + rightBound + ") ["
@@ -61,12 +82,15 @@ class Node<T, U> {
 }
 
 class SegmentTree<T, U> {
+    static final int MAXN = 1000_006;
     int N;
     Node<T, U>[] tree;
-    Stack<Node> stack = new Stack<>();
+    Stack<Node> stack;
 
     SegmentTree (T[] ar) {
         Node.actualLength = ar.length;
+        stack = new Stack<>();
+        stack.ensureCapacity(MAXN);
 
         N = 1; while (N < ar.length) N <<= 1;
         tree = new Node[(N << 1) - 1];
@@ -119,7 +143,7 @@ class SegmentTree<T, U> {
     }
 
     T rangeQuery(int l, int r, U key) {
-        Node<T, U> retVal = new Node<>(-7, -7, -7);
+        T retVal = (T) Node.defaultValue;
         stack.clear();
         stack.push(tree[0]);
 
@@ -130,13 +154,13 @@ class SegmentTree<T, U> {
             if (!top.isValid() || top.leftBound > r || top.rightBound < l)
                 continue;
             else if (top.leftBound >= l && top.rightBound <= r)
-                retVal.node_node(top);
+                retVal = top.operate(retVal);
             else {
                 stack.push(tree[(top.index << 1) + 1]);
                 stack.push(tree[(top.index << 1) + 2]);
             }
         }
-        return retVal.value;
+        return retVal;
     }
 
     void pushDown(Node<T, U> node) {
@@ -145,16 +169,6 @@ class SegmentTree<T, U> {
             tree[(node.index << 1) + 2].lazy_lazy(node);
         }
         node.lazy_node();
-    }
-
-    int binarySearch(ArrayList<T> ar, int l, int r, T key) {
-        int mid = (l + r) >> 1;
-        long k = (long) key;
-        if ((long) ar.get(l) > k) return l;
-        else if ((long) ar.get(r) <= k) return r + 1;
-        else if (l + 1 >= r) return r;
-        else if ((long) ar.get(mid) <= k) return binarySearch(ar, mid + 1, r, key);
-        else return binarySearch(ar, l, mid, key);
     }
 
     public String toString() {
