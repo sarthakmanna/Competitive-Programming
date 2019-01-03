@@ -1,4 +1,7 @@
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Iterator;
+import java.util.Stack;
 
 class HLD_LCA {
     static final int MAXN = 1000_006;
