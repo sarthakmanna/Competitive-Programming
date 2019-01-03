@@ -24,6 +24,7 @@ class Solver {
         for (int tc = io.nextInt(); tc > 0; --tc) {
             
         }
+        io.flush();
     }
 }
 
