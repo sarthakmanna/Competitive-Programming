@@ -1,13 +1,10 @@
-import java.util.ArrayList;
-import java.util.Stack;
-import java.util.Collections;
+import java.util.*;
 
-class HLD_LCA
-{
+class HLD_LCA {
     static final int MAXN = 1000_006;
     static final long defaultValue = Long.MIN_VALUE;
     ArrayList<Integer>[] graph;
-    int[] depth, parent, chCount;
+    int[] depth, parent, chCount, queue;
     int nodes, root;
     long[] weight;
 
@@ -15,10 +12,17 @@ class HLD_LCA
     int[] treePos, linearTree, segRoot;
 
     HLD_LCA(ArrayList<Integer>[] g, int[] dep, int[] par, int[] ch,
-            int n, int r, long[] wt)
-    {
+            int n, int r, long[] wt) {
         graph = g;  depth = dep;    parent = par;   chCount = ch;
         nodes = n;  root = r;       weight = wt;
+
+        HLDify();
+    }
+
+    HLD_LCA(ArrayList<Integer>[] g, int n, int r, long[] wt) {
+        graph = g;  nodes = n;
+        root = r;   weight = wt;
+        iterativeDFS();
 
         HLDify();
     }
@@ -27,18 +31,40 @@ class HLD_LCA
         return Math.max(a, b);
     }
 
-    private void HLDify()
-    {
+    private void iterativeDFS() {
+        parent = new int[nodes];    depth = new int[nodes];
+        chCount = new int[nodes];   queue = new int[nodes];
+        Arrays.fill(chCount, 1);
+
+        int i, st = 0, end = 0;
+        parent[root] = -1;  depth[root] = 1;    queue[end++] = root;
+
+        while (st < end) {
+            int node = queue[st++], h = depth[node] + 1;
+            Iterator<Integer> itr = graph[node].iterator();
+            while (itr.hasNext()) {
+                int ch = itr.next();
+                if (depth[ch] > 0) continue;
+                depth[ch] = h;
+                parent[ch] = node;
+                queue[end++] = ch;
+            }
+        }
+        for (i = nodes - 1; i >= 0; --i)
+            if (queue[i] != root)
+                chCount[parent[queue[i]]] += chCount[queue[i]];
+    }
+
+    private void HLDify() {
         int i, j, treeRoot = -7;
-        treePos = new int[nodes];
-        linearTree = new int[nodes];
+
+        treePos = new int[nodes];   linearTree = new int[nodes];
         segRoot = new int[nodes];
 
         Stack<Integer> stack = new Stack<>();
         stack.ensureCapacity(MAXN);
         stack.push(root);
-        for (i = 0; !stack.isEmpty(); ++i)
-        {
+        for (i = 0; !stack.isEmpty(); ++i) {
             int node = stack.pop();
             if (i == 0 || linearTree[i - 1] != parent[node])
                 treeRoot = node;
@@ -51,7 +77,8 @@ class HLD_LCA
                 int tempNode = graph[node].get(j);
                 if (tempNode == parent[node]) continue;
                 if (bigChild < 0 || chCount[bigChild] < chCount[tempNode]) {
-                    bigChild = tempNode; bigChildPos = j;
+                    bigChild = tempNode;
+                    bigChildPos = j;
                 }
             }
             if (bigChildPos >= 0) {
@@ -61,7 +88,7 @@ class HLD_LCA
             }
 
             for (int itr : graph[node])
-                if(parent[node] != itr)
+                if (parent[node] != itr)
                     stack.push(itr);
         }
 
@@ -71,13 +98,10 @@ class HLD_LCA
         st = new SegmentTree<>(respectiveWeights);
     }
 
-    long pathQuery(int node1, int node2, Long key)
-    {
+    long pathQuery(int node1, int node2, Long key) {
         long ret = defaultValue, temp;
-        while (segRoot[node1] != segRoot[node2])
-        {
-            if (depth[segRoot[node1]] > depth[segRoot[node2]])
-            {
+        while (segRoot[node1] != segRoot[node2]) {
+            if (depth[segRoot[node1]] > depth[segRoot[node2]]) {
                 node1 ^= node2;
                 node2 ^= node1;
                 node1 ^= node2;
@@ -88,8 +112,7 @@ class HLD_LCA
             node2 = parent[segRoot[node2]];
         }
 
-        if(treePos[node1] > treePos[node2])
-        {
+        if (treePos[node1] > treePos[node2]) {
             node1 ^= node2;
             node2 ^= node1;
             node1 ^= node2;
@@ -99,12 +122,10 @@ class HLD_LCA
 
         return ret;
     }
-    void pathUpdate(int node1, int node2, long value)
-    {
-        while (segRoot[node1] != segRoot[node2])
-        {
-            if (depth[segRoot[node1]] > depth[segRoot[node2]])
-            {
+
+    void pathUpdate(int node1, int node2, long value) {
+        while (segRoot[node1] != segRoot[node2]) {
+            if (depth[segRoot[node1]] > depth[segRoot[node2]]) {
                 node1 ^= node2;
                 node2 ^= node1;
                 node1 ^= node2;
@@ -112,8 +133,7 @@ class HLD_LCA
             st.rangeUpdate(treePos[segRoot[node2]], treePos[node2], value);
             node2 = parent[segRoot[node2]];
         }
-        if(treePos[node1] > treePos[node2])
-        {
+        if (treePos[node1] > treePos[node2]) {
             node1 ^= node2;
             node2 ^= node1;
             node1 ^= node2;
@@ -121,12 +141,19 @@ class HLD_LCA
         st.rangeUpdate(treePos[node1], treePos[node2], value);     // ...treePos[node1] + 1... for Edge Update
     }
 
-    int getLCA(int node1, int node2)
-    {
-        while (segRoot[node1] != segRoot[node2])
-        {
-            if (depth[segRoot[node1]] > depth[segRoot[node2]])
-            {
+    long subtreeQuery(int node, Long key) {
+        int pos = treePos[node];
+        return st.rangeQuery(pos, pos + chCount[node] - 1, key); // ...pos + 1 for Edge Query
+    }
+
+    void subtreeUpdate(int node, Long value) {
+        int pos = treePos[node];
+        st.rangeUpdate(pos, pos + chCount[node] - 1, value);    // ...pos + 1 for Edge Update
+    }
+
+    int getLCA(int node1, int node2) {
+        while (segRoot[node1] != segRoot[node2]) {
+            if (depth[segRoot[node1]] > depth[segRoot[node2]]) {
                 node1 ^= node2;
                 node2 ^= node1;
                 node1 ^= node2;
@@ -135,9 +162,10 @@ class HLD_LCA
         }
         return (depth[node1] < depth[node2]) ? node1 : node2;
     }
+
     int parentAtDepth(int node, int targetDepth) // depth[node] >= targetDepth
     {
-        if(depth[node] < targetDepth)
+        if (depth[node] < targetDepth)
             return -7;
 
         while (depth[segRoot[node]] > targetDepth)
