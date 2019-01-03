@@ -6,29 +6,24 @@ class CP {
         new Thread(null, new Runnable() {
             @Override
             public void run() {
-                new Solver().run();
+                try {
+                    new Solver().solve();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
         }, "Solver", 1l << 30).start();
     }
 }
 
-class Solver extends Thread {
-    public void run() {
-        try {
-            solve();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
+class Solver {
+    IO io = new IO(System.in);
 
-    static IO io = new IO(System.in);
-
-    static void solve() throws Exception {
+    void solve() throws Exception {
         int i, j, k;
         for (int tc = io.nextInt(); tc > 0; --tc) {
-
+            
         }
-        io.flush();
     }
 }
 
