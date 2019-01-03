@@ -29,7 +29,7 @@ class HLD_LCA
 
     private void HLDify()
     {
-        int i, treeRoot = -7;
+        int i, j, treeRoot = -7;
         treePos = new int[nodes];
         linearTree = new int[nodes];
         segRoot = new int[nodes];
@@ -46,7 +46,20 @@ class HLD_LCA
             treePos[node] = i;
             segRoot[node] = treeRoot;
 
-            Collections.sort(graph[node], (Integer a, Integer b) -> Integer.compare(chCount[a], chCount[b]));
+            int bigChild = -7, bigChildPos = -7, lastPos = graph[node].size() - 1;
+            for (j = 0; j < graph[node].size(); ++j) {
+                int tempNode = graph[node].get(j);
+                if (tempNode == parent[node]) continue;
+                if (bigChild < 0 || chCount[bigChild] < chCount[tempNode]) {
+                    bigChild = tempNode; bigChildPos = j;
+                }
+            }
+            if (bigChildPos >= 0) {
+                int temp = graph[node].get(lastPos);
+                graph[node].set(lastPos, bigChild);
+                graph[node].set(bigChildPos, temp);
+            }
+
             for (int itr : graph[node])
                 if(parent[node] != itr)
                     stack.push(itr);
