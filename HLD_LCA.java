@@ -146,12 +146,12 @@ class HLD_LCA {
 
     long subtreeQuery(int node, Long key) {
         int pos = treePos[node];
-        return st.rangeQuery(pos, pos + chCount[node] - 1, key); // ...pos + 1 for Edge Query
+        return st.rangeQuery(pos, pos + chCount[node] - 1, key); // ...(pos + 1,... for Edge Query
     }
 
     void subtreeUpdate(int node, Long value) {
         int pos = treePos[node];
-        st.rangeUpdate(pos, pos + chCount[node] - 1, value);    // ...pos + 1 for Edge Update
+        st.rangeUpdate(pos, pos + chCount[node] - 1, value);    // ...(pos + 1,... for Edge Update
     }
 
     int getLCA(int node1, int node2) {
