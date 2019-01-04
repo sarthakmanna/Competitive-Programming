@@ -52,7 +52,7 @@ class HLD_LCA {
         HLDify();
     }
 
-    static Long operate(Long a, Long b) {
+    Long operate(Long a, Long b) {
         return Math.max(a, b);
     }
 
