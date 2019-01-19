@@ -2,8 +2,10 @@ import java.io.*;
 import java.util.*;
 
 class CP {
-    public static void main(String[] args) {
-        new Thread(null, new Runnable() {
+    public static void main(String[] args) throws Exception {
+        long time = System.currentTimeMillis();
+
+        /*new Thread(null, new Runnable() {
             @Override
             public void run() {
                 try {
@@ -12,31 +14,49 @@ class CP {
                     e.printStackTrace();
                 }
             }
-        }, "Solver", 1l << 30).start();
+        }, "Solver", 1l << 30).start();*/
+
+        new Solver().solve();
+
+        System.err.println(System.currentTimeMillis() - time);
     }
 }
 
 class Solver {
-    IO io = new IO(System.in);
+    IO io = new IO(System.in, System.out);
 
     void solve() throws Exception {
         int i, j, k;
         for (int tc = io.nextInt(); tc > 0; --tc) {
-            
+
         }
         io.flush();
     }
 }
 
+
 class IO {
     static byte[] buf = new byte[2048];
     static int index, total;
     static InputStream in;
-    static StringBuilder sb = new StringBuilder();
+    static BufferedWriter bw;
 
 
-    IO(InputStream is) {
-        in = is;
+    IO(InputStream is, OutputStream os) {
+        try {
+            in = is;
+            bw = new BufferedWriter(new OutputStreamWriter(os));
+        } catch (Exception e) {
+        }
+    }
+
+    IO(String inputFile, String outputFile) {
+        try {
+            in = new FileInputStream(inputFile);
+            bw = new BufferedWriter(new OutputStreamWriter(
+                    new FileOutputStream(outputFile)));
+        } catch (Exception e) {
+        }
     }
 
     int scan() throws Exception {
@@ -81,20 +101,21 @@ class IO {
         return neg ? -val : val;
     }
 
-    void print(Object a) {
-        sb.append(a.toString());
+    void print(Object a) throws Exception {
+        bw.write(a.toString());
     }
 
-    void println(Object a) {
-        sb.append(a.toString()).append("\n");
+    void println() throws Exception {
+        bw.write("\n");
     }
 
-    void println() {
-        sb.append("\n");
+    void println(Object a) throws Exception {
+        print(a);
+        println();
     }
 
-    void flush() {
-        System.out.print(sb);
-        sb = new StringBuilder();
+    void flush() throws Exception {
+        bw.flush();
+        bw.close();
     }
 }
