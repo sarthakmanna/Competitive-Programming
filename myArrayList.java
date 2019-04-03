@@ -34,6 +34,10 @@ class myArrayList implements Iterable<Long> {
         return A[ind];
     }
 
+    long pop() {
+        return A[--len];
+    }
+
     void clear() {
         len = 0;
     }
