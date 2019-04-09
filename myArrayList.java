@@ -60,7 +60,7 @@ class myArrayList implements Iterable<Long> {
         while (p1 < size() || p2 < list.size()) {
             if (p1 >= size()) ret.add(list.get(p2++));
             else if (p2 >= list.size()) ret.add(get(p1++));
-            else if (get(p1) <= get(p2)) ret.add(get(p1++));
+            else if (get(p1) <= list.get(p2)) ret.add(get(p1++));
             else ret.add(list.get(p2++));
         }
         return ret;
@@ -82,6 +82,7 @@ class myArrayList implements Iterable<Long> {
     int countFloor(long key) {
         // counts number of elements <= key
         // provided this list is sorted
+        if (isEmpty()) return 0;
         int l = 0, r = size() - 1, mid;
         while (true) {
             mid = l + r >> 1;
