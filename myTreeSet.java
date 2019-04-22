@@ -276,6 +276,6 @@ class Node {
     }
 
     public String toString() {
-        return value + "(" + size + ", " + height +  "), ";
+        return value + ", ";
     }
 }
