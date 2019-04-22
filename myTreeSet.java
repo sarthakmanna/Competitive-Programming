@@ -1,36 +1,71 @@
+
 class myTreeSet {
     Node root;
-    int size;
+    private int size;
 
-    myTreeSet() { root = null; size = 0; }
+    myTreeSet() {
+        root = null;
+        size = 0;
+    }
 
-    boolean add(long value) { return add(new Node(value)); }
-    boolean remove(long value) {
+    public boolean add(long value) {
+        return add(new Node(value));
+    }
+
+    public boolean remove(long value) {
         Node actual = new Node(value), toRemove = floor(actual);
         if (toRemove.compareTo(actual) != 0) return false;
         return remove(toRemove);
     }
-    long floor(long value) { return floor(new Node(value)).value; }
-    long ceiling(long value) { return ceiling(new Node(value)).value; }
-    long lower(long value) { return lower(new Node(value)).value; }
-    long higher(long value) { return higher(new Node(value)).value; }
-    int size() { return root.size(); }
 
-    boolean add(Node toAdd) {
+    public boolean pollAtIndex(int index) {
+        if (index < 0 || index >= size()) return false;
+        else return remove(navigateTo(root, index));
+    }
+
+    public long floor(long value) {
+        return floor(new Node(value)).value;
+    }
+
+    public long ceiling(long value) {
+        return ceiling(new Node(value)).value;
+    }
+
+    public long lower(long value) {
+        return lower(new Node(value)).value;
+    }
+
+    public long higher(long value) { return higher(new Node(value)).value; }
+
+    public long elementAtIndex(int index) {
+        if (index < 0 || index >= size()) return 7 / 0;
+        else return navigateTo(root, index).value;
+    }
+
+    public int countFloorNodes(long value) { return countFloorNodes(root, new Node(value)); }
+
+    public int size() {
+        return root.size();
+    }
+
+    private boolean add(Node toAdd) {
         if (root == null) {
-            root = toAdd; return true;
+            root = toAdd;
+            return true;
         }
 
         Node tr = root;
         while (true) {
             if (toAdd.compareTo(tr) < 0) {
                 if (tr.left == null) {
-                    tr.left = toAdd; toAdd.parent = tr;
+                    tr.left = toAdd;
+                    toAdd.parent = tr;
                     break;
                 } else tr = tr.left;
             } else if (toAdd.compareTo(tr) > 0) {
                 if (tr.right == null) {
-                    tr.right = toAdd; toAdd.parent = tr;
+                    tr.right = toAdd;
+                    toAdd.parent = tr;
                     break;
                 } else tr = tr.right;
             } else return false;
@@ -43,9 +78,10 @@ class myTreeSet {
         return true;
     }
 
-    boolean remove(Node node) {
+    private boolean remove(Node node) {
         if (root.size() == 1) {
-            root = null; return true;
+            root = null;
+            return true;
         }
         Node p;
 
@@ -85,7 +121,13 @@ class myTreeSet {
             tr = tr.parent;
         }
 
-        p.parent = node.parent; p.left = node.left; p.right = node.right;
+        p.parent = node.parent;
+        node.parent = null;
+        p.left = node.left;
+        node.left = null;
+        p.right = node.right;
+        node.right = null;
+
         if (p.parent != null) {
             if (p.parent.left == node) p.parent.left = p;
             else if (p.parent.right == node) p.parent.right = p;
@@ -103,7 +145,7 @@ class myTreeSet {
         return true;
     }
 
-    Node floor(Node node) {
+    private Node floor(Node node) {
         if (root == null) return null;
 
         Node tr = root;
@@ -118,7 +160,7 @@ class myTreeSet {
         }
     }
 
-    Node ceiling(Node node) {
+    private Node ceiling(Node node) {
         if (root == null) return null;
 
         Node tr = root;
@@ -133,18 +175,33 @@ class myTreeSet {
         }
     }
 
-    Node lower(Node node) {
+    private Node lower(Node node) {
         Node fl = floor(node);
         if (fl != null && node.compareTo(fl) == 0) fl = prev(fl);
         return fl;
     }
 
-    Node higher(Node node) {
+    private Node higher(Node node) {
         Node cl = ceiling(node);
         if (cl != null && node.compareTo(cl) == 0) cl = next(cl);
         return cl;
     }
 
+    private Node navigateTo(Node node, int ind) {
+        if (Node.findSize(node.left) > ind) return navigateTo(node.left, ind);
+        ind -= Node.findSize(node.left);
+        if (ind == 0) return node;
+        ind -= 1;
+        return navigateTo(node.right, ind);
+    }
+
+    private int countFloorNodes(Node node, Node key) {
+        if (node == null) return 0;
+        else if (node.compareTo(key) > 0)
+            return countFloorNodes(node.left, key);
+        else
+            return Node.findSize(node.left) + 1 + countFloorNodes(node.right, key);
+    }
 
     private Node prev(Node node) {
         Node parent;
@@ -180,7 +237,7 @@ class myTreeSet {
         }
     }
 
-    void dfs(Node node, StringBuilder sb) {
+    private void dfs(Node node, StringBuilder sb) {
         if (node == null) return;
         dfs(node.left, sb);
         sb.append(node);
@@ -200,7 +257,10 @@ class Node {
     long value;
     int size, height;
 
-    Node(long v) { value = v; size = height = 1; }
+    Node(long v) {
+        value = v;
+        size = height = 1;
+    }
 
     Node finalisePosition(Node root) {
         int lheight = findDepth(left), rheight = findDepth(right);
@@ -232,9 +292,11 @@ class Node {
 
         A.left = B.right;
         if (B.right != null) B.right.parent = A;
-        B.right = A; A.parent = B;
+        B.right = A;
+        A.parent = B;
 
-        A.setParameters(); B.setParameters();
+        A.setParameters();
+        B.setParameters();
 
         return root;
     }
@@ -251,9 +313,11 @@ class Node {
 
         A.right = B.left;
         if (B.left != null) B.left.parent = A;
-        B.left = A; A.parent = B;
+        B.left = A;
+        A.parent = B;
 
-        A.setParameters(); B.setParameters();
+        A.setParameters();
+        B.setParameters();
 
         return root;
     }
@@ -263,13 +327,17 @@ class Node {
         height = 1 + Math.max(findDepth(left), findDepth(right));
     }
 
-    int size() { return size; }
+    int size() {
+        return size;
+    }
 
-    int findDepth(Node node) {
+    static int findDepth(Node node) {
         return node == null ? 0 : node.height;
     }
 
-    int findSize(Node node) { return node == null ? 0 : node.size(); }
+    static int findSize(Node node) {
+        return node == null ? 0 : node.size();
+    }
 
     public int compareTo(Node node) {
         return Long.compare(value, node.value);
