@@ -2,8 +2,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 class myTreeSet implements Iterable<Long> {
-    final int MAXN = 1000_006;
-
     Node root;
 
     myTreeSet() { root = null; }
@@ -225,7 +223,7 @@ class myTreeSet implements Iterable<Long> {
     }
 
     private int itrInd;
-    private ArrayList<Node> dfsTrav = new ArrayList<>(MAXN);
+    private ArrayList<Node> dfsTrav = new ArrayList<>();
 
     public Iterator<Long> iterator() {
         dfsTrav.clear(); dfs(root);
