@@ -4,9 +4,13 @@ import java.util.Iterator;
 class myTreeSet implements Iterable<Long> {
     Node root;
 
-    myTreeSet() { root = null; }
+    myTreeSet() {
+        root = null;
+    }
 
-    public boolean add(long value) { return add(new Node(value)); }
+    public boolean add(long value) {
+        return add(new Node(value));
+    }
 
     public boolean remove(long value) {
         Node actual = new Node(value), toRemove = floor(actual);
@@ -19,22 +23,34 @@ class myTreeSet implements Iterable<Long> {
         else return remove(navigateTo(root, index));
     }
 
-    public long floor(long value) { return floor(new Node(value)).value; }
+    public long floor(long value) {
+        return floor(new Node(value)).value;
+    }
 
-    public long ceiling(long value) { return ceiling(new Node(value)).value; }
+    public long ceiling(long value) {
+        return ceiling(new Node(value)).value;
+    }
 
-    public long lower(long value) { return lower(new Node(value)).value; }
+    public long lower(long value) {
+        return lower(new Node(value)).value;
+    }
 
-    public long higher(long value) { return higher(new Node(value)).value; }
+    public long higher(long value) {
+        return higher(new Node(value)).value;
+    }
 
     public long elementAtIndex(int index) {
         if (index < 0 || index >= size()) return 7 / 0;
         else return navigateTo(root, index).value;
     }
 
-    public int countFloorNodes(long value) { return countFloorNodes(root, new Node(value)); }
+    public int countFloorNodes(long value) {
+        return countFloorNodes(root, new Node(value));
+    }
 
-    public int size() { return root.size(); }
+    public int size() {
+        return root == null ? 0 : root.size();
+    }
 
     private boolean add(Node toAdd) {
         if (root == null) {
@@ -109,9 +125,12 @@ class myTreeSet implements Iterable<Long> {
             tr = tr.parent;
         }
 
-        p.parent = node.parent; node.parent = null;
-        p.left = node.left; node.left = null;
-        p.right = node.right; node.right = null;
+        p.parent = node.parent;
+        node.parent = null;
+        p.left = node.left;
+        node.left = null;
+        p.right = node.right;
+        node.right = null;
 
         if (p.parent != null) {
             if (p.parent.left == node) p.parent.left = p;
@@ -226,7 +245,8 @@ class myTreeSet implements Iterable<Long> {
     private ArrayList<Node> dfsTrav = new ArrayList<>();
 
     public Iterator<Long> iterator() {
-        dfsTrav.clear(); dfs(root);
+        dfsTrav.clear();
+        dfs(root);
         itrInd = 0;
         Iterator<Long> iterator = new Iterator<Long>() {
             @Override
@@ -250,7 +270,8 @@ class myTreeSet implements Iterable<Long> {
     }
 
     public String toString() {
-        dfsTrav.clear(); dfs(root);
+        dfsTrav.clear();
+        dfs(root);
         if (dfsTrav.isEmpty()) return "[]";
         else return dfsTrav.toString();
     }
