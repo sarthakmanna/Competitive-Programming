@@ -5,26 +5,33 @@ import java.util.Stack;
 
 class HLD_LCA {
     static final int MAXN = 1000_006;
-    static final long defaultValue = Long.MIN_VALUE;
+    static final long defaultValue = 0;
     ArrayList<Integer>[] graph;
     int[] depth, parent, chCount, queue;
     int N, root;
     long[] weight;
 
-    SegmentTree<Long, Long> st;
+    SegmentTree st;
     int[] treePos, linearTree, segRoot;
 
     HLD_LCA(ArrayList<Integer>[] g, int[] dep, int[] par, int[] ch,
             int n, int r, long[] wt) {
-        graph = g;  depth = dep;    parent = par;   chCount = ch;
-        N = n;  root = r;   weight = wt;
+        graph = g;
+        depth = dep;
+        parent = par;
+        chCount = ch;
+        N = n;
+        root = r;
+        weight = wt;
 
         HLDify();
     }
 
     HLD_LCA(ArrayList<Integer>[] g, int n, int r, long[] wt) {
-        graph = g;  N = n;
-        root = r;   weight = wt;
+        graph = g;
+        N = n;
+        root = r;
+        weight = wt;
         iterativeDFS();
 
         HLDify();
@@ -32,7 +39,8 @@ class HLD_LCA {
 
     HLD_LCA(Edge[] edges, int n, int r) {
         int i;
-        N = n;  root = r;
+        N = n;
+        root = r;
 
         graph = new ArrayList[N];
         for (i = 0; i < N; ++i) graph[i] = new ArrayList<>();
@@ -52,17 +60,21 @@ class HLD_LCA {
         HLDify();
     }
 
-    Long operate(Long a, Long b) {
-        return Math.max(a, b);
+    long operate(long a, long b) {
+        return a + b;
     }
 
     private void iterativeDFS() {
-        parent = new int[N];    depth = new int[N];
-        chCount = new int[N];   queue = new int[N];
+        parent = new int[N];
+        depth = new int[N];
+        chCount = new int[N];
+        queue = new int[N];
         Arrays.fill(chCount, 1);
 
         int i, st = 0, end = 0;
-        parent[root] = -1;  depth[root] = 1;    queue[end++] = root;
+        parent[root] = -1;
+        depth[root] = 1;
+        queue[end++] = root;
 
         while (st < end) {
             int node = queue[st++], h = depth[node] + 1;
@@ -83,7 +95,8 @@ class HLD_LCA {
     private void HLDify() {
         int i, j, treeRoot = -7;
 
-        treePos = new int[N];   linearTree = new int[N];
+        treePos = new int[N];
+        linearTree = new int[N];
         segRoot = new int[N];
 
         Stack<Integer> stack = new Stack<>();
@@ -117,13 +130,13 @@ class HLD_LCA {
                     stack.push(itr);
         }
 
-        Long[] respectiveWeights = new Long[N];
+        long[] respectiveWeights = new long[N];
         for (i = 0; i < N; ++i)
             respectiveWeights[i] = weight[linearTree[i]];
-        st = new SegmentTree<>(respectiveWeights);
+        st = new SegmentTree(respectiveWeights);
     }
 
-    long pathQuery(int node1, int node2, Long key) {
+    long pathQuery(int node1, int node2, long key) {
         long ret = defaultValue, temp;
         while (segRoot[node1] != segRoot[node2]) {
             if (depth[segRoot[node1]] > depth[segRoot[node2]]) {
@@ -166,12 +179,12 @@ class HLD_LCA {
         st.rangeUpdate(treePos[node1], treePos[node2], value);     // ...treePos[node1] + 1... for Edge Update
     }
 
-    long subtreeQuery(int node, Long key) {
+    long subtreeQuery(int node, long key) {
         int pos = treePos[node];
         return st.rangeQuery(pos, pos + chCount[node] - 1, key); // ...(pos + 1,... for Edge Query
     }
 
-    void subtreeUpdate(int node, Long value) {
+    void subtreeUpdate(int node, long value) {
         int pos = treePos[node];
         st.rangeUpdate(pos, pos + chCount[node] - 1, value);    // ...(pos + 1,... for Edge Update
     }
@@ -206,7 +219,8 @@ class Edge {
     long weight;
 
     Edge(int a, int b, int wt) {
-        u = a; v = b;
+        u = a;
+        v = b;
         weight = wt;
     }
 
