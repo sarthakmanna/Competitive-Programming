@@ -218,7 +218,7 @@ class Edge {
     int u, v;
     long weight;
 
-    Edge(int a, int b, int wt) {
+    Edge(int a, int b, long wt) {
         u = a;
         v = b;
         weight = wt;
