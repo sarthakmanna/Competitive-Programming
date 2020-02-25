@@ -1,46 +1,69 @@
+import os
+import time
+
 while 1:
 	try:
-	
-		import os
-		inputPath = "/home/sarthak/IdeaProjects/CompetitiveProgramming/src"
-		outputPath = "/home/sarthak/Desktop/codes/Main.java"
+		inputPath = r"Input path goes here".replace('\\', '/')
+		outputPath = r"Output path goes here".replace('\\', '/')
 
+		inputPaths = list(os.walk(inputPath))
 
-		for (parentDir, childDirs, childFiles) in os.walk(inputPath): break
-		print ("Merging:", childFiles)
+		if not inputPaths:
+			raise Exception('inputPath not found')
+
+		childFiles = inputPaths[0][-1]
+
+		print("Merging:")
+		print(*childFiles, sep='\n')
+		print()
 
 		importStatements = set()
 		contents = {}
 
-		def readFile(fileName):
-			global importStatements, contents
-			file = open(fileName, 'r')
+		mainFile = ''
+
+		def readFile(file_name):
+			global mainFile
+
+			file = open(file_name, 'r')
 			lines = file.readlines()
-			truncated = []
-			for l in lines:
-				if 'import ' in l: importStatements.add(l)
-				else: truncated.append(l)
-			contents[fileName] = ''.join(truncated)
+			contents[file_name] = ''
+
+			for line in lines:
+				if all(keyWord in line for keyWord in ('main', 'args')):
+					mainFile = file_name
+
+				if line.startswith('import '):
+					importStatements.add(line)
+				else:
+					contents[file_name] += line
+
 			file.close()
-			
-		for file in childFiles: readFile(inputPath + "/" + file)
 
-		for mainFile in contents:
-			if all(keyWord in contents[mainFile] for keyWord in ('main', 'args')):
-				print("Main File:", mainFile)
-				break
+		for file in childFiles:
+			readFile(inputPath + "/" + file)
 
+		print('Main File:', mainFile)
+		print()
 
-		output = open(outputPath, 'w+')
-		output.write(''.join(importStatements) + "\n")
+		output = open(outputPath, 'w')
+
+		if importStatements:
+			output.write(''.join(importStatements) + "\n")
+
 		output.write(''.join(contents[mainFile]) + "\n")
 
 		for file in contents:
 			if file != mainFile:
 				output.write(''.join(contents[file]) + "\n")
+
 		output.close()
 
-	except: pass
-	
-	import time
-	time.sleep(.5)
+		print('Successfully merged the files')
+
+	except Exception as err:
+		print('Error:', err)
+		print()
+
+	print('-' * 40)
+	time.sleep(1)
