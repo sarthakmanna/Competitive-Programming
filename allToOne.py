@@ -1,69 +1,68 @@
-import os
-import time
-
 while 1:
 	try:
-		inputPath = r"Input path goes here".replace('\\', '/')
-		outputPath = r"Output path goes here".replace('\\', '/')
+	
+		import os
+		inputPath = "/home/sarthak/IdeaProjects/CompetitiveProgramming/src"
+		outputPath = "/home/sarthak/Desktop/codes/Main.java"
 
-		inputPaths = list(os.walk(inputPath))
 
-		if not inputPaths:
-			raise Exception('inputPath not found')
-
-		childFiles = inputPaths[0][-1]
-
-		print("Merging:")
-		print(*childFiles, sep='\n')
-		print()
+		for (parentDir, childDirs, childFiles) in os.walk(inputPath): break
+		print ("Merging:", childFiles)
 
 		importStatements = set()
 		contents = {}
 
-		mainFile = ''
-
-		def readFile(file_name):
-			global mainFile
-
-			file = open(file_name, 'r')
+		def readFile(fileName):
+			global importStatements, contents
+			file = open(fileName, 'r')
 			lines = file.readlines()
-			contents[file_name] = ''
-
-			for line in lines:
-				if all(keyWord in line for keyWord in ('main', 'args')):
-					mainFile = file_name
-
-				if line.startswith('import '):
-					importStatements.add(line)
-				else:
-					contents[file_name] += line
-
+			truncated = []
+			for l in lines:
+				if 'import ' in l: importStatements.add(l)
+				else: truncated.append(l)
+			contents[fileName] = ''.join(truncated)
 			file.close()
+			
+		for file in childFiles: readFile(inputPath + "/" + file)
 
-		for file in childFiles:
-			readFile(inputPath + "/" + file)
+		for mainFile in contents:
+			if all(keyWord in contents[mainFile] for keyWord in ('main', 'args')):
+				print ("Main File:", mainFile)
+				break
+		for solverFile in contents:
+			if all(keyWord in contents[solverFile] for keyWord in ('TESTCASES', 'Solver', 'solve()')):
+				print ("Solver File:", solverFile)
+				break
+		for helperFile in contents:
+			if all(keyWord in contents[helperFile] for keyWord in ('InputStream', 'Buffered')):
+				print ("Helper File:", helperFile)
+				break
+		print ("\n")
 
-		print('Main File:', mainFile)
-		print()
+		if mainFile == solverFile:
+			solverFile = None
+		if helperFile == mainFile or helperFile == solverFile:
+			helperFile = None
 
-		output = open(outputPath, 'w')
-
-		if importStatements:
-			output.write(''.join(importStatements) + "\n")
-
-		output.write(''.join(contents[mainFile]) + "\n")
+		output = open(outputPath, 'w+')
+		output.write(''.join(importStatements) + "\n")
+		if mainFile != None:
+			output.write(''.join(contents[mainFile]) + "\n")
+		if solverFile != None:
+			output.write(''.join(contents[solverFile]) + "\n")
 
 		for file in contents:
-			if file != mainFile:
+			if file != mainFile and file != solverFile and file != helperFile:
 				output.write(''.join(contents[file]) + "\n")
 
+		if helperFile != None:				
+			output.write(''.join(contents[helperFile]) + "\n")
+		
 		output.close()
-
-		print('Successfully merged the files')
-
-	except Exception as err:
-		print('Error:', err)
-		print()
-
-	print('-' * 40)
-	time.sleep(1)
+		
+	except:
+		print ("Error !!!")
+		pass
+	
+	import time
+	time.sleep(.5)
