@@ -7,6 +7,12 @@ public class Helper {
     final int MAXN;
     final Random rnd;
 
+    public Helper() {
+        MOD = 1000_000_007;
+        MAXN = 1000_006;
+        rnd = new Random();
+    }
+
     public Helper(long mod, int maxn) {
         MOD = mod;
         MAXN = maxn;

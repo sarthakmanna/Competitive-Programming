@@ -9,7 +9,7 @@ public class FenwickTree {
         tree = new long[N];
     }
 
-    void update(int idx, long val) {
+    public void update(int idx, long val) {
         ++idx;
         while (idx < N) {
             tree[idx] += val;
@@ -17,7 +17,7 @@ public class FenwickTree {
         }
     }
 
-    long query(int idx) {
+    public long prefixQuery(int idx) {
         ++idx;
         long ret = 0;
         while (idx > 0) {
@@ -27,9 +27,9 @@ public class FenwickTree {
         return ret;
     }
 
-    long query(int l, int r) {
-        long ret = query(r);
-        if (l > 0) ret -= query(l - 1);
+    public long query(int l, int r) {
+        long ret = prefixQuery(r);
+        if (l > 0) ret -= prefixQuery(l - 1);
         return ret;
     }
 }

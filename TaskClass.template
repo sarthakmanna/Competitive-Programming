@@ -4,13 +4,14 @@ import java.io.*;
 import java.util.*;
 import java.math.*;
 
+import Templates.Helper;
 import %InputClassFQN%;
 import %OutputClassFQN%;
 
 public class %TaskClass% {
     final static int MAXN = 1000_006;
     final static long MOD = 1000_000_007;
-    final static Templates.Helper hp = new Templates.Helper(MOD, MAXN);
+    final static Helper hp = new Helper(MOD, MAXN);
 
     public void solve(int testNumber, %InputClass% in, %OutputClass% out) {
         int i, j, k;
