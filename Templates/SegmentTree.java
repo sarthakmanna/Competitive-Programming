@@ -1,5 +1,20 @@
-class SegmentTree {
+package Templates;
+
+public class SegmentTree {
     private int N;
+
+    public int getN() {
+        return N;
+    }
+
+    public long[] getTree() {
+        return tree;
+    }
+
+    public long[] getLazy() {
+        return lazy;
+    }
+
     private long[] tree, lazy;
 
     public SegmentTree(long[] ar) {

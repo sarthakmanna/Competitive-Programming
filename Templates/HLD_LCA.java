@@ -1,12 +1,63 @@
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Iterator;
-import java.util.Stack;
+package Templates;
 
-class HLD_LCA {
-    static final int MAXN = 1000_006;
+import java.util.*;
+
+public class HLD_LCA {
     static final long defaultValue = 0;
     ArrayList<Integer>[] graph;
+
+    public static long getDefaultValue() {
+        return defaultValue;
+    }
+
+    public ArrayList<Integer>[] getGraph() {
+        return graph;
+    }
+
+    public int[] getDepth() {
+        return depth;
+    }
+
+    public int[] getParent() {
+        return parent;
+    }
+
+    public int[] getChCount() {
+        return chCount;
+    }
+
+    public int[] getQueue() {
+        return queue;
+    }
+
+    public int getN() {
+        return N;
+    }
+
+    public int getRoot() {
+        return root;
+    }
+
+    public long[] getWeight() {
+        return weight;
+    }
+
+    public SegmentTree getSt() {
+        return st;
+    }
+
+    public int[] getTreePos() {
+        return treePos;
+    }
+
+    public int[] getLinearTree() {
+        return linearTree;
+    }
+
+    public int[] getSegRoot() {
+        return segRoot;
+    }
+
     int[] depth, parent, chCount, queue;
     int N, root;
     long[] weight;
@@ -14,8 +65,8 @@ class HLD_LCA {
     SegmentTree st;
     int[] treePos, linearTree, segRoot;
 
-    HLD_LCA(ArrayList<Integer>[] g, int[] dep, int[] par, int[] ch,
-            int n, int r, long[] wt) {
+    public HLD_LCA(ArrayList<Integer>[] g, int[] dep, int[] par, int[] ch,
+                   int n, int r, long[] wt) {
         graph = g;
         depth = dep;
         parent = par;
@@ -27,7 +78,7 @@ class HLD_LCA {
         HLDify();
     }
 
-    HLD_LCA(ArrayList<Integer>[] g, int n, int r, long[] wt) {
+    public HLD_LCA(ArrayList<Integer>[] g, int n, int r, long[] wt) {
         graph = g;
         N = n;
         root = r;
@@ -37,7 +88,7 @@ class HLD_LCA {
         HLDify();
     }
 
-    HLD_LCA(Edge[] edges, int n, int r) {
+    public HLD_LCA(Edge[] edges, int n, int r) {
         int i;
         N = n;
         root = r;
@@ -100,7 +151,7 @@ class HLD_LCA {
         segRoot = new int[N];
 
         Stack<Integer> stack = new Stack<>();
-        stack.ensureCapacity(MAXN);
+        stack.ensureCapacity(N << 1);
         stack.push(root);
         for (i = 0; !stack.isEmpty(); ++i) {
             int node = stack.pop();
@@ -212,19 +263,33 @@ class HLD_LCA {
 
         return node;
     }
-}
 
-class Edge {
-    int u, v;
-    long weight;
 
-    Edge(int a, int b, long wt) {
-        u = a;
-        v = b;
-        weight = wt;
-    }
+    public static class Edge {
+        int u, v;
 
-    public String toString() {
-        return "(" + u + ", " + v + " -> " + weight + ")";
+        public int getU() {
+            return u;
+        }
+
+        public int getV() {
+            return v;
+        }
+
+        public long getWeight() {
+            return weight;
+        }
+
+        long weight;
+
+        public Edge(int a, int b, long wt) {
+            u = a;
+            v = b;
+            weight = wt;
+        }
+
+        public String toString() {
+            return "(" + u + ", " + v + " -> " + weight + ")";
+        }
     }
 }

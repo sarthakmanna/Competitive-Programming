@@ -1,8 +1,10 @@
-class FenwickTree {
+package Templates;
+
+public class FenwickTree {
     int N;
     long[] tree;
 
-    FenwickTree(int size) {
+    public FenwickTree(int size) {
         N = size + 1;
         tree = new long[N];
     }
@@ -22,6 +24,12 @@ class FenwickTree {
             ret += tree[idx];
             idx -= idx & -idx;
         }
+        return ret;
+    }
+
+    long query(int l, int r) {
+        long ret = query(r);
+        if (l > 0) ret -= query(l - 1);
         return ret;
     }
 }

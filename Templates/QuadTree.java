@@ -1,14 +1,30 @@
+package Templates;
+
 import java.util.*;
 
-class QuadTree {
+public class QuadTree {
     int N, H;
+
+    public int getN() {
+        return N;
+    }
+
+    public int getH() {
+        return H;
+    }
+
+    public long[][][] getTree() {
+        return tree;
+    }
+
     long[][][] tree;
 
     public QuadTree(int r, int c) {
         int n = Math.max(r, c);
         N = H = 1;
         while (N < n) {
-            N <<= 1; ++H;
+            N <<= 1;
+            ++H;
         }
         tree = new long[H][N][N];
     }
@@ -19,7 +35,8 @@ class QuadTree {
         for (int h = H - 1; h > 0; --h) {
             int px = r >> 1, py = c >> 1;
             tree[h - 1][px][py] += value;
-            r = px; c = py;
+            r = px;
+            c = py;
         }
     }
 

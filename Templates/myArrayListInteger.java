@@ -1,61 +1,65 @@
+package Templates;
+
 import java.util.*;
 
-class myArrayList implements Iterable<Long> {
-    int len;
-    long[] A;
+public class myArrayListInteger implements Iterable<Integer> {
+    private int len;
+    private int[] A;
 
-    myArrayList(int initialLength) {
-        A = new long[Math.max(1, initialLength)];
+    public myArrayListInteger(int initialLength) {
+        A = new int[Math.max(1, initialLength)];
         len = 0;
     }
 
-    myArrayList(myArrayList src) {
-        A = new long[src.A.length];
+    public myArrayListInteger(myArrayListInteger src) {
+        A = new int[src.A.length];
         System.arraycopy(src.A, 0, A, 0, src.len);
         len = src.len;
     }
 
-    void add(long ele) {
+    public void add(int ele) {
         if (len == A.length) {
-            long[] newAr = new long[A.length << 1];
+            int[] newAr = new int[A.length << 1];
             System.arraycopy(A, 0, newAr, 0, len);
             A = newAr;
         }
         A[len++] = ele;
     }
 
-    void set(int ind, long ele) throws Exception {
+    public void set(int ind, int ele) throws Exception {
         if (ind >= len) throw new ArrayIndexOutOfBoundsException(ind);
+        else if (ind < 0) ind += size();
         A[ind] = ele;
     }
 
-    long get(int ind) {
+    public int get(int ind) {
         if (ind >= len) throw new ArrayIndexOutOfBoundsException(ind);
+        else if (ind < 0) ind += size();
         return A[ind];
     }
 
-    long pop() {
+    public int pop() {
         return A[--len];
     }
 
-    void clear() {
+    public void clear() {
         len = 0;
     }
 
-    int size() {
+    public int size() {
         return len;
     }
 
-    int length() {
+    public int length() {
         return len;
     }
 
-    boolean isEmpty() {
+    public boolean isEmpty() {
         return len == 0;
     }
 
-    myArrayList mergeSorted(myArrayList list) {
-        myArrayList ret = new myArrayList(size() + list.size());
+    public myArrayListInteger mergeSorted(myArrayListInteger list) {
+        myArrayListInteger ret = new myArrayListInteger(size() + list.size());
         int p1 = 0, p2 = 0;
         while (p1 < size() || p2 < list.size()) {
             if (p1 >= size()) ret.add(list.get(p2++));
@@ -66,11 +70,22 @@ class myArrayList implements Iterable<Long> {
         return ret;
     }
 
-    void sort() {
-        Arrays.sort(A, 0, len);
+    public void sort(int fromIndex, int toIndex) {
+        Arrays.sort(A, fromIndex, toIndex);
     }
 
-    void reverse() {
+    public void sort() {
+        sort(0, size());
+    }
+
+    public void sort(int fromIndex, int toIndex, Comparator<Integer> com) {
+        Integer[] temp = new Integer[toIndex - fromIndex];
+        for (int i = fromIndex, k = 0; i < toIndex; ++i) temp[k++] = A[i];
+        Arrays.sort(temp, com);
+        for (int i = fromIndex, k = 0; i < toIndex; ++i) A[i] = temp[k++];
+    }
+
+    public void reverse() {
         for (int i = 0; i < size() >> 1; ++i) {
             int j = size() - 1 - i;
             A[i] ^= A[j];
@@ -79,9 +94,8 @@ class myArrayList implements Iterable<Long> {
         }
     }
 
-    int countFloor(long key) {
-        // counts number of elements <= key
-        // provided this list is sorted
+    public int countFloor(int key) {
+        // counts number of elements <= key provided this list is sorted
         if (isEmpty()) return 0;
         int l = 0, r = size() - 1, mid;
         while (true) {
@@ -97,24 +111,24 @@ class myArrayList implements Iterable<Long> {
 
     int itrInd;
 
-    public Iterator<Long> iterator() {
+    public Iterator<Integer> iterator() {
         itrInd = 0;
-        Iterator<Long> iterator = new Iterator<Long>() {
+        Iterator<Integer> iterator = new Iterator<Integer>() {
             @Override
             public boolean hasNext() {
                 return itrInd < size();
             }
 
             @Override
-            public Long next() {
+            public Integer next() {
                 return get(itrInd++);
             }
         };
         return iterator;
     }
 
-    public myArrayList clone() {
-        return new myArrayList(this);
+    public myArrayListInteger clone() {
+        return new myArrayListInteger(this);
     }
 
     public String toString() {

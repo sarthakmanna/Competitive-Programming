@@ -1,18 +1,20 @@
-class Matrix {
+package Templates;
+
+public class Matrix {
     long[][] multiply(long[][] A, long[][] B, long MOD)   // returns (A x B) % MOD
     {
         if (A[0].length != B.length)
             return null;
         long[][] ret = new long[A.length][B[0].length];
         int i, j, k;
-        
+
         for (i = 0; i < A.length; ++i)
             for (j = 0; j < A[i].length; ++j)
                 A[i][j] = (A[i][j] % MOD + MOD) % MOD;
         for (i = 0; i < B.length; ++i)
             for (j = 0; j < B[i].length; ++j)
                 B[i][j] = (B[i][j] % MOD + MOD) % MOD;
-            
+
         for (i = 0; i < ret.length; ++i)
             for (j = 0; j < ret[i].length; ++j)
                 for (k = 0; k < B.length; ++k)

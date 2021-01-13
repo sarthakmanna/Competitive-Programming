@@ -1,19 +1,31 @@
-import java.util.ArrayList;
-import java.util.Iterator;
+package Templates;
 
-class myTreeSet implements Iterable<Long> {
-    Node root;
+import java.util.*;
 
-    myTreeSet() {
+public class myTreeSetLong implements Iterable<Long> {
+    NodeLong root;
+
+    public boolean isAllowDuplicates() {
+        return allowDuplicates;
+    }
+
+    boolean allowDuplicates;
+
+    public myTreeSetLong() {
         root = null;
     }
 
+    public myTreeSetLong(boolean allowDupli) {
+        root = null;
+        allowDuplicates = allowDupli;
+    }
+
     public boolean add(long value) {
-        return add(new Node(value));
+        return add(new NodeLong(value));
     }
 
     public boolean remove(long value) {
-        Node actual = new Node(value), toRemove = floor(actual);
+        NodeLong actual = new NodeLong(value), toRemove = floor(actual);
         if (toRemove.compareTo(actual) != 0) return false;
         return remove(toRemove);
     }
@@ -24,19 +36,19 @@ class myTreeSet implements Iterable<Long> {
     }
 
     public long floor(long value) {
-        return floor(new Node(value)).value;
+        return floor(new NodeLong(value)).value;
     }
 
     public long ceiling(long value) {
-        return ceiling(new Node(value)).value;
+        return ceiling(new NodeLong(value)).value;
     }
 
     public long lower(long value) {
-        return lower(new Node(value)).value;
+        return lower(new NodeLong(value)).value;
     }
 
     public long higher(long value) {
-        return higher(new Node(value)).value;
+        return higher(new NodeLong(value)).value;
     }
 
     public long elementAtIndex(int index) {
@@ -44,21 +56,21 @@ class myTreeSet implements Iterable<Long> {
         else return navigateTo(root, index).value;
     }
 
-    public int countFloorNodes(long value) {
-        return countFloorNodes(root, new Node(value));
+    public int countFloorNodeLongs(long value) {
+        return countFloorNodeLongs(root, new NodeLong(value));
     }
 
     public int size() {
         return root == null ? 0 : root.size();
     }
 
-    private boolean add(Node toAdd) {
+    private boolean add(NodeLong toAdd) {
         if (root == null) {
             root = toAdd;
             return true;
         }
 
-        Node tr = root;
+        NodeLong tr = root;
         while (true) {
             if (toAdd.compareTo(tr) < 0) {
                 if (tr.left == null) {
@@ -66,7 +78,7 @@ class myTreeSet implements Iterable<Long> {
                     toAdd.parent = tr;
                     break;
                 } else tr = tr.left;
-            } else if (toAdd.compareTo(tr) > 0) {
+            } else if (allowDuplicates || toAdd.compareTo(tr) > 0) {
                 if (tr.right == null) {
                     tr.right = toAdd;
                     toAdd.parent = tr;
@@ -82,12 +94,12 @@ class myTreeSet implements Iterable<Long> {
         return true;
     }
 
-    private boolean remove(Node node) {
+    private boolean remove(NodeLong node) {
         if (root.size() == 1) {
             root = null;
             return true;
         }
-        Node p;
+        NodeLong p;
 
         if (node.left != null) {
             p = prev(node);
@@ -110,7 +122,7 @@ class myTreeSet implements Iterable<Long> {
             else if (node.parent.right == node) node.parent.right = null;
             else System.exit(7 / 0);
 
-            Node tr = node.parent;
+            NodeLong tr = node.parent;
             while (tr != null) {
                 root = tr.finalisePosition(root);
                 tr = tr.parent;
@@ -119,7 +131,7 @@ class myTreeSet implements Iterable<Long> {
         }
 
 
-        Node tr = p.parent;
+        NodeLong tr = p.parent;
         while (tr != node) {
             root = tr.finalisePosition(root);
             tr = tr.parent;
@@ -149,10 +161,10 @@ class myTreeSet implements Iterable<Long> {
         return true;
     }
 
-    private Node floor(Node node) {
+    private NodeLong floor(NodeLong node) {
         if (root == null) return null;
 
-        Node tr = root;
+        NodeLong tr = root;
         while (true) {
             if (node.compareTo(tr) < 0) {
                 if (tr.left == null) return prev(tr);
@@ -164,10 +176,10 @@ class myTreeSet implements Iterable<Long> {
         }
     }
 
-    private Node ceiling(Node node) {
+    private NodeLong ceiling(NodeLong node) {
         if (root == null) return null;
 
-        Node tr = root;
+        NodeLong tr = root;
         while (true) {
             if (node.compareTo(tr) < 0) {
                 if (tr.left == null) return tr;
@@ -179,36 +191,36 @@ class myTreeSet implements Iterable<Long> {
         }
     }
 
-    private Node lower(Node node) {
-        Node fl = floor(node);
+    private NodeLong lower(NodeLong node) {
+        NodeLong fl = floor(node);
         if (fl != null && node.compareTo(fl) == 0) fl = prev(fl);
         return fl;
     }
 
-    private Node higher(Node node) {
-        Node cl = ceiling(node);
+    private NodeLong higher(NodeLong node) {
+        NodeLong cl = ceiling(node);
         if (cl != null && node.compareTo(cl) == 0) cl = next(cl);
         return cl;
     }
 
-    private Node navigateTo(Node node, int ind) {
-        if (Node.findSize(node.left) > ind) return navigateTo(node.left, ind);
-        ind -= Node.findSize(node.left);
+    private NodeLong navigateTo(NodeLong node, int ind) {
+        if (NodeLong.findSize(node.left) > ind) return navigateTo(node.left, ind);
+        ind -= NodeLong.findSize(node.left);
         if (ind == 0) return node;
         ind -= 1;
         return navigateTo(node.right, ind);
     }
 
-    private int countFloorNodes(Node node, Node key) {
+    private int countFloorNodeLongs(NodeLong node, NodeLong key) {
         if (node == null) return 0;
         else if (node.compareTo(key) > 0)
-            return countFloorNodes(node.left, key);
+            return countFloorNodeLongs(node.left, key);
         else
-            return Node.findSize(node.left) + 1 + countFloorNodes(node.right, key);
+            return NodeLong.findSize(node.left) + 1 + countFloorNodeLongs(node.right, key);
     }
 
-    private Node prev(Node node) {
-        Node parent;
+    private NodeLong prev(NodeLong node) {
+        NodeLong parent;
 
         if (node.left != null) {
             node = node.left;
@@ -224,8 +236,8 @@ class myTreeSet implements Iterable<Long> {
         }
     }
 
-    private Node next(Node node) {
-        Node parent;
+    private NodeLong next(NodeLong node) {
+        NodeLong parent;
 
         if (node.right != null) {
             node = node.right;
@@ -242,7 +254,7 @@ class myTreeSet implements Iterable<Long> {
     }
 
     private int itrInd;
-    private ArrayList<Node> dfsTrav = new ArrayList<>();
+    private ArrayList<NodeLong> dfsTrav = new ArrayList<>();
 
     public Iterator<Long> iterator() {
         dfsTrav.clear();
@@ -262,7 +274,7 @@ class myTreeSet implements Iterable<Long> {
         return iterator;
     }
 
-    private void dfs(Node node) {
+    private void dfs(NodeLong node) {
         if (node == null) return;
         dfs(node.left);
         dfsTrav.add(node);
@@ -277,17 +289,17 @@ class myTreeSet implements Iterable<Long> {
     }
 }
 
-class Node {
-    Node parent, left, right;
+class NodeLong {
+    NodeLong parent, left, right;
     long value;
     int size, height;
 
-    Node(long v) {
+    NodeLong(long v) {
         value = v;
         size = height = 1;
     }
 
-    Node finalisePosition(Node root) {
+    NodeLong finalisePosition(NodeLong root) {
         int lheight = findDepth(left), rheight = findDepth(right);
 
         if (lheight > rheight + 1) {
@@ -305,8 +317,8 @@ class Node {
         return root;
     }
 
-    Node rotateRight(Node root) {
-        Node A = this, B = left, P = parent;
+    NodeLong rotateRight(NodeLong root) {
+        NodeLong A = this, B = left, P = parent;
 
         if (P != null) {
             if (P.left == this) P.left = B;
@@ -326,8 +338,8 @@ class Node {
         return root;
     }
 
-    Node rotateLeft(Node root) {
-        Node A = this, B = right, P = parent;
+    NodeLong rotateLeft(NodeLong root) {
+        NodeLong A = this, B = right, P = parent;
 
         if (P != null) {
             if (P.left == this) P.left = B;
@@ -356,15 +368,15 @@ class Node {
         return size;
     }
 
-    static int findDepth(Node node) {
+    static int findDepth(NodeLong node) {
         return node == null ? 0 : node.height;
     }
 
-    static int findSize(Node node) {
+    static int findSize(NodeLong node) {
         return node == null ? 0 : node.size();
     }
 
-    public int compareTo(Node node) {
+    public int compareTo(NodeLong node) {
         return Long.compare(value, node.value);
     }
 
