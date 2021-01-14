@@ -111,7 +111,7 @@ public class HLD_LCA {
         HLDify();
     }
 
-    long operate(long a, long b) {
+    public long operate(long a, long b) {
         return a + b;
     }
 
@@ -187,7 +187,7 @@ public class HLD_LCA {
         st = new SegmentTree(respectiveWeights);
     }
 
-    long pathQuery(int node1, int node2, long key) {
+    public long pathQuery(int node1, int node2, long key) {
         long ret = defaultValue, temp;
         while (segRoot[node1] != segRoot[node2]) {
             if (depth[segRoot[node1]] > depth[segRoot[node2]]) {
@@ -212,7 +212,7 @@ public class HLD_LCA {
         return ret;
     }
 
-    void pathUpdate(int node1, int node2, long value) {
+    public void pathUpdate(int node1, int node2, long value) {
         while (segRoot[node1] != segRoot[node2]) {
             if (depth[segRoot[node1]] > depth[segRoot[node2]]) {
                 node1 ^= node2;
@@ -230,17 +230,17 @@ public class HLD_LCA {
         st.rangeUpdate(treePos[node1], treePos[node2], value);     // ...treePos[node1] + 1... for Edge Update
     }
 
-    long subtreeQuery(int node, long key) {
+    public long subtreeQuery(int node, long key) {
         int pos = treePos[node];
         return st.rangeQuery(pos, pos + chCount[node] - 1, key); // ...(pos + 1,... for Edge Query
     }
 
-    void subtreeUpdate(int node, long value) {
+    public void subtreeUpdate(int node, long value) {
         int pos = treePos[node];
         st.rangeUpdate(pos, pos + chCount[node] - 1, value);    // ...(pos + 1,... for Edge Update
     }
 
-    int getLCA(int node1, int node2) {
+    public int getLCA(int node1, int node2) {
         while (segRoot[node1] != segRoot[node2]) {
             if (depth[segRoot[node1]] > depth[segRoot[node2]]) {
                 node1 ^= node2;
@@ -252,7 +252,7 @@ public class HLD_LCA {
         return (depth[node1] < depth[node2]) ? node1 : node2;
     }
 
-    int parentAtDepth(int node, int targetDepth) // depth[node] >= targetDepth
+    public int parentAtDepth(int node, int targetDepth) // depth[node] >= targetDepth
     {
         if (depth[node] < targetDepth)
             return -7;
