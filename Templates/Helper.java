@@ -3,8 +3,8 @@ package Templates;
 import java.util.*;
 
 public class Helper {
-    final long MOD;
-    final int MAXN;
+    public final long MOD;
+    public final int MAXN;
     final Random rnd;
 
     public Helper() {
@@ -19,11 +19,11 @@ public class Helper {
         rnd = new Random();
     }
 
-    public static int[] getSieve() {
+    public int[] getSieve() {
         return sieve;
     }
 
-    public static ArrayList<Integer> getPrimes() {
+    public ArrayList<Integer> getPrimes() {
         return primes;
     }
 
@@ -44,6 +44,25 @@ public class Helper {
                 }
             }
         }
+    }
+
+    public HashMap<Integer, Integer> primeFactorise(int num) {
+        HashMap<Integer, Integer> factors = new HashMap<>();
+        setSieve();
+        for (int prime : primes) {
+            if (prime * prime <= num) {
+                int c = 0;
+                while (num % prime == 0) {
+                    ++c;
+                    num /= prime;
+                }
+                if (c > 0) factors.put(prime, c);
+            } else {
+                break;
+            }
+        }
+        if (num > 1) factors.put(num, 1);
+        return factors;
     }
 
     public boolean isPrime(int number) {
