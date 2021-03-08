@@ -38,7 +38,7 @@ public class ConvexHull {
         ArrayDeque<Point> hull = new ArrayDeque<>();
         Point last = null, secondLast = null;
 
-        for (int i = P.length; i >= 0; --i) {
+        for (int i = P.length - 1; i >= 0; --i) {
             while (last != null && secondLast != null && cross(secondLast, last, P[i]) <= 0) {
                 last = secondLast;
                 secondLast = hull.pollLast();
