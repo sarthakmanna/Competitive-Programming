@@ -10,6 +10,7 @@ public class Fraction {
     }
 
     long num, den;
+    Helper hp = new Helper();
 
     public Fraction(long n, long d) {
         num = n;
@@ -28,88 +29,55 @@ public class Fraction {
         }
     }
 
-    long gcd(long a, long b) {
-        long temp;
-        a = Math.abs(a);
-        b = Math.abs(b);
-        while (b > 0) {
-            temp = b;
-            b = a % b;
-            a = temp;
-        }
-        return a;
-    }
-
-    void reduce() {
-        long gcd = gcd(num, den);
+    public void reduce() {
+        long gcd = hp.gcd(num, den);
         num /= gcd;
         den /= gcd;
     }
 
-    long clVal() {
-        long val = (long) decimalValue();
-        while (num > val * den)
-            ++val;
-        while (num <= (val - 1) * den)
-            --val;
-        return val;
+    public long clVal() {
+        return (num + den - 1) / den;
     }
 
-    long flVal() {
-        long val = (long) decimalValue();
-        while (num < val * den)
-            --val;
-        while (num >= (val + 1) * den)
-            ++val;
-        return val;
+    public long flVal() {
+        return num / den;
     }
 
-    void add(Fraction f, long MOD) {
+    public void add(Fraction f, long MOD) {
         num = ((num * f.den) % MOD + (f.num * den) % MOD) % MOD;
         den *= f.den;
         den %= MOD;
     }
 
-    void multiply(Fraction f, long MOD) {
+    public void multiply(Fraction f, long MOD) {
         num *= f.num;
         num %= MOD;
         den *= f.den;
         den %= MOD;
     }
 
-    void invert() {
+    public void invert() {
         long temp = num;
         num = den;
         den = temp;
     }
 
-    void negate() {
+    public void negate() {
         if (den < 0) den = -den;
         else num = -num;
     }
 
-    double decimalValue() {
+    public double decimalValue() {
         return num / (double) den;
     }
 
-    long modular_pow(long base, long exponent, long MOD) {
-        long result = 1;
-        while (exponent > 0) {
-            if (exponent % 2 == 1)
-                result = (result * base) % MOD;
-            exponent = exponent >> 1;
-            base = (base * base) % MOD;
-        }
-        return result;
+    public void power(long exp, long MOD) {
+        num = hp.pow(num, exp, MOD);
+        den = hp.pow(den, exp, MOD);
     }
 
-    void power(long exp, long MOD) {
-        num = modular_pow(num, exp, MOD);
-        den = modular_pow(den, exp, MOD);
-    }
-
-    long modInverse(long num, long MOD) {
-        return modular_pow(num, MOD - 2, MOD);
+    public long modValue(long MOD) {
+        return getNum() % MOD * hp.invModulo(getDen(), MOD) % MOD;
     }
 
     public String toString() {
