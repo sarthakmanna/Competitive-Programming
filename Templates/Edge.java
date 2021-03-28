@@ -23,6 +23,10 @@ public class Edge {
         weight = wt;
     }
 
+    public int getOtherNode(int node) {
+        return node == u ? v : node == v ? u : 17 / 0;
+    }
+
     public String toString() {
         return "(" + u + ", " + v + " -> " + weight + ")";
     }
