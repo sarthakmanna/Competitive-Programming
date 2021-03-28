@@ -71,20 +71,9 @@ public class Fraction {
         return num / (double) den;
     }
 
-    public long modular_pow(long base, long exponent, long MOD) {
-        long result = 1;
-        while (exponent > 0) {
-            if (exponent % 2 == 1)
-                result = (result * base) % MOD;
-            exponent = exponent >> 1;
-            base = (base * base) % MOD;
-        }
-        return result;
-    }
-
     public void power(long exp, long MOD) {
-        num = modular_pow(num, exp, MOD);
-        den = modular_pow(den, exp, MOD);
+        num = hp.pow(num, exp, MOD);
+        den = hp.pow(den, exp, MOD);
     }
 
     public long modValue(long MOD) {
