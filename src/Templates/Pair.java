@@ -27,9 +27,9 @@ public class Pair<U, V> implements Comparable<Pair<U, V>> {
 
     public int compareTo(Pair<U, V> p) {
         if (first instanceof Integer) {
-            return Integer.compare((int) first, (int) p.getFirst());
+            return Integer.compare((Integer) first, (Integer) p.getFirst());
         } else if (first instanceof Long) {
-            return Long.compare((long) first, (long) p.getFirst());
+            return Long.compare((Long) first, (Long) p.getFirst());
         } else if (first instanceof String) {
             return ((String) first).compareTo((String) p.getFirst());
         } else {
