@@ -123,6 +123,14 @@ public class Helper {
         return numerator * pow(denominator, MOD - 2, MOD) % MOD;
     }
 
+    public boolean getBitAtPosition(int num, int pos) {
+        return ((num >> pos) & 1) == 1;
+    }
+
+    public boolean getBitAtPosition(long num, int pos) {
+        return ((num >> pos) & 1) == 1;
+    }
+
     public String joinElements(long... ar) {
         StringBuilder sb = new StringBuilder();
         for (long itr : ar) sb.append(itr).append(" ");
