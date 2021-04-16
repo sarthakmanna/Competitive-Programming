@@ -253,7 +253,7 @@ public class Helper {
                 ar[i] ^= ar[r];
                 ar[r] ^= ar[i];
                 ar[i] ^= ar[r];
-            }
+            } else break;
         }
     }
 
@@ -265,7 +265,7 @@ public class Helper {
                 ar[i] ^= ar[r];
                 ar[r] ^= ar[i];
                 ar[i] ^= ar[r];
-            }
+            } else break;
         }
     }
 
