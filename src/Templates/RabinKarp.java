@@ -29,6 +29,7 @@ public class RabinKarp {
 
     int N;
     long[] hash, pow, inv;
+    Helper hp = new Helper();
 
     public RabinKarp(char[] S, long P, long M) { // M must be a prime number
         PRIME = P;
@@ -43,7 +44,7 @@ public class RabinKarp {
 
         inv = new long[Math.max(2, N)];
         inv[0] = 1;
-        inv[1] = pow(PRIME, MOD - 2, MOD);
+        inv[1] = hp.pow(PRIME, MOD - 2, MOD);
         for (i = 2; i < inv.length; ++i) inv[i] = inv[i - 1] * inv[1] % MOD;
 
         hash = new long[N];
@@ -82,17 +83,5 @@ public class RabinKarp {
         } else {
             return initialHash;
         }
-    }
-
-
-    private long pow(long base, long exp, long MOD) {
-        base %= MOD;
-        long ret = 1;
-        while (exp > 0) {
-            if ((exp & 1) == 1) ret = ret * base % MOD;
-            base = base * base % MOD;
-            exp >>= 1;
-        }
-        return ret;
     }
 }

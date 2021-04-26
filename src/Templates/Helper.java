@@ -24,6 +24,7 @@ public class Helper {
     }
 
     public ArrayList<Integer> getPrimes() {
+        if (sieve == null || sieve.length < MAXN) setSieve();
         return primes;
     }
 
@@ -67,7 +68,7 @@ public class Helper {
 
     public boolean isPrime(int number) {
         setSieve();
-        return number <= 1 ? false : sieve[number] == number;
+        return number > 1 && sieve[number] == number;
     }
 
     // https://en.wikipedia.org/wiki/Miller%E2%80%93Rabin_primality_test
