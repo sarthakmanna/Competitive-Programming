@@ -70,6 +70,16 @@ public class myArrayListInteger implements Iterable<Integer> {
         return ret;
     }
 
+    public void mergeSmallToLarge(myArrayListInteger list) {
+        if (this.size() >= list.size()) {
+            for (int itr : list) this.add(itr);
+        } else {
+            for (int itr : this) list.add(itr);
+            this.A = list.A;
+            this.len = list.len;
+        }
+    }
+
     public void sort(int fromIndex, int toIndex) {
         Arrays.sort(A, fromIndex, toIndex);
     }
@@ -100,7 +110,7 @@ public class myArrayListInteger implements Iterable<Integer> {
         int l = 0, r = size() - 1, mid;
         while (true) {
             mid = l + r >> 1;
-            if (l + 1 >= r) {
+            if (l == mid) {
                 if (get(r) <= key) return r + 1;
                 else if (get(l) > key) return l;
                 else return r;
