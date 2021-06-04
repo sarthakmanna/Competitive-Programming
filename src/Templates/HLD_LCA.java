@@ -184,10 +184,10 @@ public class HLD_LCA {
         long[] respectiveWeights = new long[N];
         for (i = 0; i < N; ++i)
             respectiveWeights[i] = weight[linearTree[i]];
-        st = new SegmentTree(respectiveWeights);
+        st = new SegmentTree(respectiveWeights, 0, 0);
     }
 
-    public long pathQuery(int node1, int node2, long key) {
+    public long pathQuery(int node1, int node2) {
         long ret = defaultValue, temp;
         while (segRoot[node1] != segRoot[node2]) {
             if (depth[segRoot[node1]] > depth[segRoot[node2]]) {
@@ -196,7 +196,7 @@ public class HLD_LCA {
                 node1 ^= node2;
             }
 
-            temp = st.rangeQuery(treePos[segRoot[node2]], treePos[node2], key);
+            temp = st.rangeQuery(treePos[segRoot[node2]], treePos[node2]);
             ret = operate(ret, temp);
             node2 = parent[segRoot[node2]];
         }
@@ -206,7 +206,7 @@ public class HLD_LCA {
             node2 ^= node1;
             node1 ^= node2;
         }
-        temp = st.rangeQuery(treePos[node1], treePos[node2], key);   // ...treePos[node1] + 1... for Edge Query
+        temp = st.rangeQuery(treePos[node1], treePos[node2]);   // ...treePos[node1] + 1... for Edge Query
         ret = operate(ret, temp);
 
         return ret;
@@ -230,9 +230,9 @@ public class HLD_LCA {
         st.rangeUpdate(treePos[node1], treePos[node2], value);     // ...treePos[node1] + 1... for Edge Update
     }
 
-    public long subtreeQuery(int node, long key) {
+    public long subtreeQuery(int node) {
         int pos = treePos[node];
-        return st.rangeQuery(pos, pos + chCount[node] - 1, key); // ...(pos + 1,... for Edge Query
+        return st.rangeQuery(pos, pos + chCount[node] - 1); // ...(pos + 1,... for Edge Query
     }
 
     public void subtreeUpdate(int node, long value) {

@@ -19,7 +19,8 @@ public class SegmentTree {
 
     private long[] tree, lazy;
 
-    public SegmentTree(long[] ar) {
+    public SegmentTree(long[] ar, long def_node, long def_lazy) {
+        DEFAULT_NODE = def_node; DEFAULT_LAZY = def_lazy;
         N = 1;
         while (N < ar.length) N <<= 1;
         tree = new long[N * 2 - 1]; Arrays.fill(tree, DEFAULT_NODE);
@@ -31,7 +32,9 @@ public class SegmentTree {
         }
     }
 
-    public final long DEFAULT_NODE = 0, DEFAULT_LAZY = 0;
+    public final long DEFAULT_NODE, DEFAULT_LAZY;
+
+    // Override following three functions as per convenience.
     public long nodeToNode(long a, long b) {
         return a + b;
     }
@@ -65,8 +68,8 @@ public class SegmentTree {
         update(0, 0, N - 1, l, r, val);
     }
 
-    public long rangeQuery(int l, int r, long key) {
-        return query(0, 0, N - 1, l, r, key);
+    public long rangeQuery(int l, int r) {
+        return query(0, 0, N - 1, l, r);
     }
 
 
@@ -86,14 +89,14 @@ public class SegmentTree {
         }
     }
 
-    private long query(int i, int l, int r, int ql, int qr, long key) {
+    private long query(int i, int l, int r, int ql, int qr) {
         pushDown(i, l, r);
         int mid = l + r >> 1, i2 = i << 1;
         if (l > qr || r < ql) return DEFAULT_NODE;
         else if (l >= ql && r <= qr) return tree[i];
         else {
-            return nodeToNode(query(i2 + 1, l, mid, ql, qr, key),
-                    query(i2 + 2, mid + 1, r, ql, qr, key));
+            return nodeToNode(query(i2 + 1, l, mid, ql, qr),
+                    query(i2 + 2, mid + 1, r, ql, qr));
         }
     }
 }
