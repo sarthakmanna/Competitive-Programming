@@ -26,7 +26,7 @@ public class myArrayListInteger implements Iterable<Integer> {
         A[len++] = ele;
     }
 
-    public void set(int ind, int ele) throws Exception {
+    public void set(int ind, int ele) {
         if (ind >= len) throw new ArrayIndexOutOfBoundsException(ind);
         else if (ind < 0) ind += size();
         A[ind] = ele;
