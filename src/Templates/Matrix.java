@@ -1,7 +1,7 @@
 package Templates;
 
 public class Matrix {
-    long[][] multiply(long[][] A, long[][] B, long MOD)   // returns (A x B) % MOD
+    public long[][] multiply(long[][] A, long[][] B, long MOD)   // returns (A x B) % MOD
     {
         if (A[0].length != B.length)
             return null;
@@ -22,7 +22,7 @@ public class Matrix {
         return ret;
     }
 
-    long[][] power(long[][] ar, long exp, long MOD) // 'ar' must be square matrix
+    public long[][] power(long[][] ar, long exp, long MOD) // 'ar' must be square matrix
     {
         long[][] ret = generateUnit(ar.length);
         while (exp > 0) {
@@ -34,13 +34,13 @@ public class Matrix {
         return ret;
     }
 
-    long[][] generateUnit(int len) {
+    public long[][] generateUnit(int len) {
         long[][] ret = new long[len][len];
         for (int i = 0; i < len; ++i) ret[i][i] = 1;
         return ret;
     }
 
-    long[][] add(long[][] A, long[][] B)    // 'A' & 'B' must have same dimensions
+    public long[][] add(long[][] A, long[][] B)    // 'A' & 'B' must have same dimensions
     {
         int i, j;
         long[][] ret = new long[A.length][A[0].length];
