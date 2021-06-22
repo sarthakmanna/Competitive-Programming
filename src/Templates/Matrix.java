@@ -8,17 +8,26 @@ public class Matrix {
         long[][] ret = new long[A.length][B[0].length];
         int i, j, k;
 
-        for (i = 0; i < A.length; ++i)
-            for (j = 0; j < A[i].length; ++j)
-                A[i][j] = (A[i][j] % MOD + MOD) % MOD;
-        for (i = 0; i < B.length; ++i)
-            for (j = 0; j < B[i].length; ++j)
-                B[i][j] = (B[i][j] % MOD + MOD) % MOD;
+        for (i = 0; i < A.length; ++i) {
+            for (j = 0; j < A[i].length; ++j) {
+                A[i][j] %= MOD;
+                if (A[i][j] < 0) A[i][j] += MOD;
+            }
+        }
+        for (i = 0; i < B.length; ++i) {
+            for (j = 0; j < B[i].length; ++j) {
+                B[i][j] %= MOD;
+                if (B[i][j] < 0) B[i][j] += MOD;
+            }
+        }
 
-        for (i = 0; i < ret.length; ++i)
-            for (j = 0; j < ret[i].length; ++j)
-                for (k = 0; k < B.length; ++k)
+        for (i = 0; i < ret.length; ++i) {
+            for (j = 0; j < ret[i].length; ++j) {
+                for (k = 0; k < B.length; ++k) {
                     ret[i][j] = (ret[i][j] + (A[i][k] * B[k][j]) % MOD) % MOD;
+                }
+            }
+        }
         return ret;
     }
 
