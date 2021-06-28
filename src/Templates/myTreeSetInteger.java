@@ -313,7 +313,6 @@ public class myTreeSetInteger implements Iterable<Integer> {
     public String toString() {
         dfsTrav.clear();
         dfs(root);
-        if (dfsTrav.isEmpty()) return "[]";
-        else return dfsTrav.toString();
+        return dfsTrav.toString();
     }
 }

@@ -143,7 +143,7 @@ public class myArrayListInteger implements Iterable<Integer> {
 
     public String toString() {
         StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < len; i++) sb.append(A[i]).append(" ");
-        return sb.toString().trim();
+        for (int i = 0; i < len; i++) sb.append(A[i]).append(", ");
+        return "[" + sb.toString().trim() + "]";
     }
 }

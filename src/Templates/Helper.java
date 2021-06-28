@@ -132,30 +132,6 @@ public class Helper {
         return ((num >> pos) & 1) == 1;
     }
 
-    public String joinElements(long... ar) {
-        StringBuilder sb = new StringBuilder();
-        for (long itr : ar) sb.append(itr).append(" ");
-        return sb.toString().trim();
-    }
-
-    public String joinElements(int... ar) {
-        StringBuilder sb = new StringBuilder();
-        for (int itr : ar) sb.append(itr).append(" ");
-        return sb.toString().trim();
-    }
-
-    public String joinElements(String... ar) {
-        StringBuilder sb = new StringBuilder();
-        for (String itr : ar) sb.append(itr).append(" ");
-        return sb.toString().trim();
-    }
-
-    public String joinElements(Object... ar) {
-        StringBuilder sb = new StringBuilder();
-        for (Object itr : ar) sb.append(itr).append(" ");
-        return sb.toString().trim();
-    }
-
     public long gcd(long a, long b) {
         return b == 0 ? a : gcd(b, a % b);
     }
@@ -287,5 +263,45 @@ public class Helper {
 
     public int getRandomInRange(int l, int r) {
         return rnd.nextInt(r - l + 1) + l;
+    }
+
+    public int compare(Object a, Object b) {
+        if (a instanceof Integer) {
+            return Integer.compare((Integer) a, (Integer) b);
+        } else if (a instanceof Long) {
+            return Long.compare((Long) a, (Long) b);
+        } else if (a instanceof String) {
+            return ((String) a).compareTo((String) b);
+        } else if (a instanceof Float) {
+            return Float.compare((Float) a, (Float) b);
+        } else if (a instanceof Double) {
+            return Double.compare((Double) a, (Double) b);
+        } else {
+            return 5 / 0;
+        }
+    }
+
+    public String joinElements(long... ar) {
+        StringBuilder sb = new StringBuilder();
+        for (long itr : ar) sb.append(itr).append(" ");
+        return sb.toString().trim();
+    }
+
+    public String joinElements(int... ar) {
+        StringBuilder sb = new StringBuilder();
+        for (int itr : ar) sb.append(itr).append(" ");
+        return sb.toString().trim();
+    }
+
+    public String joinElements(String... ar) {
+        StringBuilder sb = new StringBuilder();
+        for (String itr : ar) sb.append(itr).append(" ");
+        return sb.toString().trim();
+    }
+
+    public String joinElements(Object... ar) {
+        StringBuilder sb = new StringBuilder();
+        for (Object itr : ar) sb.append(itr).append(" ");
+        return sb.toString().trim();
     }
 }

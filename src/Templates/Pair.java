@@ -1,6 +1,15 @@
 package Templates;
 
 public class Pair<U, V> implements Comparable<Pair<U, V>> {
+    U first;
+    V second;
+    Helper hp = new Helper();
+
+    public Pair(U u, V v) {
+        first = u;
+        second = v;
+    }
+
     public U getFirst() {
         return first;
     }
@@ -17,26 +26,16 @@ public class Pair<U, V> implements Comparable<Pair<U, V>> {
         this.second = second;
     }
 
-    U first;
-    V second;
-
-    public Pair(U u, V v) {
-        first = u;
-        second = v;
-    }
-
+    @Override
     public int compareTo(Pair<U, V> p) {
-        if (first instanceof Integer) {
-            return Integer.compare((Integer) first, (Integer) p.getFirst());
-        } else if (first instanceof Long) {
-            return Long.compare((Long) first, (Long) p.getFirst());
-        } else if (first instanceof String) {
-            return ((String) first).compareTo((String) p.getFirst());
-        } else {
-            return 5 / 0;
+        int cmp = hp.compare(first, p.first);
+        if (cmp == 0) {
+            cmp = hp.compare(second, p.second);
         }
+        return cmp;
     }
 
+    @Override
     public String toString() {
         return "(" + first + ", " + second + ")";
     }
