@@ -1,6 +1,8 @@
 package Templates;
 
+import java.util.Collection;
 import java.util.Map;
+import java.util.Set;
 
 public class myMapLong<U> {
     Map<U, Long> map;
@@ -11,6 +13,10 @@ public class myMapLong<U> {
         dummy = 0;
     }
 
+    public int size() {
+        return map.size();
+    }
+
     public Long get(U key) {
         return map.getOrDefault(key, dummy);
     }
@@ -19,8 +25,16 @@ public class myMapLong<U> {
         map.put(key, val);
     }
 
-    public void remove(U key) {
-        map.remove(key);
+    public Long remove(Object key) {
+        return map.remove(key);
+    }
+
+    public boolean containsKey(U key) {
+        return map.containsKey(key);
+    }
+
+    public boolean containsValue(Long val) {
+        return map.containsValue(val);
     }
 
     public void add(U key, long val) {
@@ -32,9 +46,20 @@ public class myMapLong<U> {
         }
     }
 
+    public Set<Map.Entry<U, Long>> entrySet() {
+        return map.entrySet();
+    }
+
+    public Set<U> keySet() {
+        return map.keySet();
+    }
+
+    public Collection<Long> values() {
+        return map.values();
+    }
+
     @Override
     public String toString() {
         return map.toString();
     }
 }
-

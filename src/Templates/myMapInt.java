@@ -1,6 +1,8 @@
 package Templates;
 
+import java.util.Collection;
 import java.util.Map;
+import java.util.Set;
 
 public class myMapInt<U> {
     Map<U, Integer> map;
@@ -11,6 +13,10 @@ public class myMapInt<U> {
         dummy = 0;
     }
 
+    public int size() {
+        return map.size();
+    }
+
     public Integer get(U key) {
         return map.getOrDefault(key, dummy);
     }
@@ -19,8 +25,16 @@ public class myMapInt<U> {
         map.put(key, val);
     }
 
-    public void remove(U key) {
-        map.remove(key);
+    public Integer remove(Object key) {
+        return map.remove(key);
+    }
+
+    public boolean containsKey(U key) {
+        return map.containsKey(key);
+    }
+
+    public boolean containsValue(Integer val) {
+        return map.containsValue(val);
     }
 
     public void add(U key, int val) {
@@ -30,6 +44,18 @@ public class myMapInt<U> {
         } else {
             put(key, newVal);
         }
+    }
+
+    public Set<Map.Entry<U, Integer>> entrySet() {
+        return map.entrySet();
+    }
+
+    public Set<U> keySet() {
+        return map.keySet();
+    }
+
+    public Collection<Integer> values() {
+        return map.values();
     }
 
     @Override
