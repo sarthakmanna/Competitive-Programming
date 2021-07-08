@@ -40,6 +40,7 @@ class FastIO {
 
     public void flush() {
         System.out.print(sb);
+        System.out.flush();
         sb = new StringBuilder();
     }
 
