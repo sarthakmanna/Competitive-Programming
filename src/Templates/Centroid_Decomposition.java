@@ -1,6 +1,5 @@
 package Templates;
 
-
 import java.util.Set;
 
 abstract public class Centroid_Decomposition {
