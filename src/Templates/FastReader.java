@@ -40,14 +40,6 @@ public class FastReader {
         return sb.toString();
     }
 
-    public String nextLine() {
-        int c;
-        StringBuilder sb = new StringBuilder();
-        for (c = scan(); c >= 0 && c != '\n'; c = scan())
-            sb.append((char) c);
-        return sb.toString();
-    }
-
     public int nextInt() {
         int c, val = 0;
         for (c = scan(); c <= 32; c = scan()) ;
