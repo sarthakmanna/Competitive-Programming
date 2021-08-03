@@ -99,4 +99,8 @@ public class SegmentTree {
                     query(i2 + 2, mid + 1, r, ql, qr));
         }
     }
+
+    public String toString() {
+        return "SegTree = " + Arrays.toString(tree) + ", " + Arrays.toString(lazy);
+    }
 }
