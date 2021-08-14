@@ -31,6 +31,10 @@ public class DSU {
         else return parent[node] = getParent(parent[node]);
     }
 
+    public int getSizeOfCompo(int node) {
+        return size[getParent(node)];
+    }
+
     public boolean isConnected(int a, int b) {
         return getParent(a) == getParent(b);
     }
