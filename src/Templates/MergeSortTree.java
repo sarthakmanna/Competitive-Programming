@@ -7,18 +7,18 @@ public class MergeSortTree {
         return N;
     }
 
-    public myArrayListLong[] getTree() {
+    public MyArrayListLong[] getTree() {
         return tree;
     }
 
-    private myArrayListLong[] tree;
+    private MyArrayListLong[] tree;
 
     public MergeSortTree(long[] ar) {
         N = 1;
         while (N < ar.length) N <<= 1;
-        tree = new myArrayListLong[N * 2 - 1];
+        tree = new MyArrayListLong[N * 2 - 1];
 
-        for (int i = N - 1; i < tree.length; ++i) tree[i] = new myArrayListLong(-7);
+        for (int i = N - 1; i < tree.length; ++i) tree[i] = new MyArrayListLong(-7);
         for (int i = 0; i < ar.length; ++i) tree[i + N - 1].add(ar[i]);
         for (int i = N - 2; i >= 0; --i) tree[i] = tree[i * 2 + 1].mergeSorted(tree[i * 2 + 2]);
     }

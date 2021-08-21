@@ -2,8 +2,8 @@ package Templates;
 
 import java.util.*;
 
-public class myTreeSetInteger implements Iterable<Integer> {
-    NodeInt root;
+public class MyTreeSetLong implements Iterable<Long> {
+    NodeLong root;
 
     public boolean isAllowDuplicates() {
         return allowDuplicates;
@@ -11,21 +11,21 @@ public class myTreeSetInteger implements Iterable<Integer> {
 
     boolean allowDuplicates;
 
-    public myTreeSetInteger() {
+    public MyTreeSetLong() {
         root = null;
     }
 
-    public myTreeSetInteger(boolean allowDupli) {
+    public MyTreeSetLong(boolean allowDupli) {
         root = null;
         allowDuplicates = allowDupli;
     }
 
-    public boolean add(int value) {
-        return add(new NodeInt(value));
+    public boolean add(long value) {
+        return add(new NodeLong(value));
     }
 
-    public boolean remove(int value) {
-        NodeInt actual = new NodeInt(value), toRemove = floor(actual);
+    public boolean remove(long value) {
+        NodeLong actual = new NodeLong(value), toRemove = floor(actual);
         if (toRemove.compareTo(actual) != 0) return false;
         return remove(toRemove);
     }
@@ -35,34 +35,34 @@ public class myTreeSetInteger implements Iterable<Integer> {
         else return remove(navigateTo(root, index));
     }
 
-    public boolean contains(int value) {
-        NodeInt fl = floor(new NodeInt(value));
+    public boolean contains(long value) {
+        NodeLong fl = floor(new NodeLong(value));
         return fl != null && fl.value == value;
     }
 
-    public int floor(int value) {
-        return floor(new NodeInt(value)).value;
+    public long floor(long value) {
+        return floor(new NodeLong(value)).value;
     }
 
-    public int ceiling(int value) {
-        return ceiling(new NodeInt(value)).value;
+    public long ceiling(long value) {
+        return ceiling(new NodeLong(value)).value;
     }
 
-    public int lower(int value) {
-        return lower(new NodeInt(value)).value;
+    public long lower(long value) {
+        return lower(new NodeLong(value)).value;
     }
 
-    public int higher(int value) {
-        return higher(new NodeInt(value)).value;
+    public long higher(long value) {
+        return higher(new NodeLong(value)).value;
     }
 
-    public int elementAtIndex(int index) {
+    public long elementAtIndex(int index) {
         if (index < 0 || index >= size()) return 7 / 0;
         else return navigateTo(root, index).value;
     }
 
-    public int countFloorNodeInts(int value) {
-        return countFloorNodeInts(root, new NodeInt(value));
+    public int countFloorNodeLongs(long value) {
+        return countFloorNodeLongs(root, new NodeLong(value));
     }
 
     public int size() {
@@ -73,33 +73,33 @@ public class myTreeSetInteger implements Iterable<Integer> {
         return size() == 0;
     }
 
-    public int first() {
-        return ceiling(Integer.MIN_VALUE);
+    public long first() {
+        return ceiling(Long.MIN_VALUE);
     }
 
-    public int last() {
-        return floor(Integer.MAX_VALUE);
+    public long last() {
+        return floor(Long.MAX_VALUE);
     }
 
-    public int pollFirst() {
-        int temp = first();
+    public long pollFirst() {
+        long temp = first();
         remove(temp);
         return temp;
     }
 
-    public int pollLast() {
-        int temp = last();
+    public long pollLast() {
+        long temp = last();
         remove(temp);
         return temp;
     }
 
-    private boolean add(NodeInt toAdd) {
+    private boolean add(NodeLong toAdd) {
         if (root == null) {
             root = toAdd;
             return true;
         }
 
-        NodeInt tr = root;
+        NodeLong tr = root;
         while (true) {
             if (toAdd.compareTo(tr) < 0) {
                 if (tr.left == null) {
@@ -123,12 +123,12 @@ public class myTreeSetInteger implements Iterable<Integer> {
         return true;
     }
 
-    private boolean remove(NodeInt node) {
+    private boolean remove(NodeLong node) {
         if (root.size() == 1) {
             root = null;
             return true;
         }
-        NodeInt p;
+        NodeLong p;
 
         if (node.left != null) {
             p = prev(node);
@@ -151,7 +151,7 @@ public class myTreeSetInteger implements Iterable<Integer> {
             else if (node.parent.right == node) node.parent.right = null;
             else System.exit(7 / 0);
 
-            NodeInt tr = node.parent;
+            NodeLong tr = node.parent;
             while (tr != null) {
                 root = tr.finalisePosition(root);
                 tr = tr.parent;
@@ -160,7 +160,7 @@ public class myTreeSetInteger implements Iterable<Integer> {
         }
 
 
-        NodeInt tr = p.parent;
+        NodeLong tr = p.parent;
         while (tr != node) {
             root = tr.finalisePosition(root);
             tr = tr.parent;
@@ -190,10 +190,10 @@ public class myTreeSetInteger implements Iterable<Integer> {
         return true;
     }
 
-    private NodeInt floor(NodeInt node) {
+    private NodeLong floor(NodeLong node) {
         if (root == null) return null;
 
-        NodeInt tr = root;
+        NodeLong tr = root;
         while (true) {
             if (node.compareTo(tr) < 0) {
                 if (tr.left == null) return prev(tr);
@@ -205,10 +205,10 @@ public class myTreeSetInteger implements Iterable<Integer> {
         }
     }
 
-    private NodeInt ceiling(NodeInt node) {
+    private NodeLong ceiling(NodeLong node) {
         if (root == null) return null;
 
-        NodeInt tr = root;
+        NodeLong tr = root;
         while (true) {
             if (node.compareTo(tr) < 0) {
                 if (tr.left == null) return tr;
@@ -220,36 +220,36 @@ public class myTreeSetInteger implements Iterable<Integer> {
         }
     }
 
-    private NodeInt lower(NodeInt node) {
-        NodeInt fl = floor(node);
+    private NodeLong lower(NodeLong node) {
+        NodeLong fl = floor(node);
         if (fl != null && node.compareTo(fl) == 0) fl = prev(fl);
         return fl;
     }
 
-    private NodeInt higher(NodeInt node) {
-        NodeInt cl = ceiling(node);
+    private NodeLong higher(NodeLong node) {
+        NodeLong cl = ceiling(node);
         if (cl != null && node.compareTo(cl) == 0) cl = next(cl);
         return cl;
     }
 
-    private NodeInt navigateTo(NodeInt node, int ind) {
-        if (NodeInt.findSize(node.left) > ind) return navigateTo(node.left, ind);
-        ind -= NodeInt.findSize(node.left);
+    private NodeLong navigateTo(NodeLong node, int ind) {
+        if (NodeLong.findSize(node.left) > ind) return navigateTo(node.left, ind);
+        ind -= NodeLong.findSize(node.left);
         if (ind == 0) return node;
         ind -= 1;
         return navigateTo(node.right, ind);
     }
 
-    private int countFloorNodeInts(NodeInt node, NodeInt key) {
+    private int countFloorNodeLongs(NodeLong node, NodeLong key) {
         if (node == null) return 0;
         else if (node.compareTo(key) > 0)
-            return countFloorNodeInts(node.left, key);
+            return countFloorNodeLongs(node.left, key);
         else
-            return NodeInt.findSize(node.left) + 1 + countFloorNodeInts(node.right, key);
+            return NodeLong.findSize(node.left) + 1 + countFloorNodeLongs(node.right, key);
     }
 
-    private NodeInt prev(NodeInt node) {
-        NodeInt parent;
+    private NodeLong prev(NodeLong node) {
+        NodeLong parent;
 
         if (node.left != null) {
             node = node.left;
@@ -265,8 +265,8 @@ public class myTreeSetInteger implements Iterable<Integer> {
         }
     }
 
-    private NodeInt next(NodeInt node) {
-        NodeInt parent;
+    private NodeLong next(NodeLong node) {
+        NodeLong parent;
 
         if (node.right != null) {
             node = node.right;
@@ -283,27 +283,27 @@ public class myTreeSetInteger implements Iterable<Integer> {
     }
 
     private int itrInd;
-    private ArrayList<NodeInt> dfsTrav = new ArrayList<>();
+    private ArrayList<NodeLong> dfsTrav = new ArrayList<>();
 
-    public Iterator<Integer> iterator() {
+    public Iterator<Long> iterator() {
         dfsTrav.clear();
         dfs(root);
         itrInd = 0;
-        Iterator<Integer> iterator = new Iterator<Integer>() {
+        Iterator<Long> iterator = new Iterator<Long>() {
             @Override
             public boolean hasNext() {
                 return itrInd < size();
             }
 
             @Override
-            public Integer next() {
+            public Long next() {
                 return dfsTrav.get(itrInd++).value;
             }
         };
         return iterator;
     }
 
-    private void dfs(NodeInt node) {
+    private void dfs(NodeLong node) {
         if (node == null) return;
         dfs(node.left);
         dfsTrav.add(node);

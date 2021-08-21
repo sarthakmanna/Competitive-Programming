@@ -2,16 +2,16 @@ package Templates;
 
 import java.util.*;
 
-public class myArrayListLong implements Iterable<Long> {
+public class MyArrayListLong implements Iterable<Long> {
     private int len;
     private long[] A;
 
-    public myArrayListLong(int initialLength) {
+    public MyArrayListLong(int initialLength) {
         A = new long[Math.max(1, initialLength)];
         len = 0;
     }
 
-    public myArrayListLong(myArrayListLong src) {
+    public MyArrayListLong(MyArrayListLong src) {
         A = new long[src.A.length];
         System.arraycopy(src.A, 0, A, 0, src.len);
         len = src.len;
@@ -58,8 +58,8 @@ public class myArrayListLong implements Iterable<Long> {
         return len == 0;
     }
 
-    public myArrayListLong mergeSorted(myArrayListLong list) {
-        myArrayListLong ret = new myArrayListLong(size() + list.size());
+    public MyArrayListLong mergeSorted(MyArrayListLong list) {
+        MyArrayListLong ret = new MyArrayListLong(size() + list.size());
         int p1 = 0, p2 = 0;
         while (p1 < size() || p2 < list.size()) {
             if (p1 >= size()) ret.add(list.get(p2++));
@@ -70,7 +70,7 @@ public class myArrayListLong implements Iterable<Long> {
         return ret;
     }
 
-    public void mergeSmallToLarge(myArrayListLong list) {
+    public void mergeSmallToLarge(MyArrayListLong list) {
         if (this.size() >= list.size()) {
             for (long itr : list) this.add(itr);
         } else {
@@ -137,8 +137,8 @@ public class myArrayListLong implements Iterable<Long> {
         return iterator;
     }
 
-    public myArrayListLong clone() {
-        return new myArrayListLong(this);
+    public MyArrayListLong clone() {
+        return new MyArrayListLong(this);
     }
 
     public String toString() {

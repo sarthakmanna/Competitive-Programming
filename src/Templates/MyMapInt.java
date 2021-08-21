@@ -4,11 +4,11 @@ import java.util.Collection;
 import java.util.Map;
 import java.util.Set;
 
-public class myMapInt<U> {
+public class MyMapInt<U> {
     Map<U, Integer> map;
     int dummy;
 
-    public myMapInt(Map<U, Integer> m) {
+    public MyMapInt(Map<U, Integer> m) {
         map = m;
         dummy = 0;
     }

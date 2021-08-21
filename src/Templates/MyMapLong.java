@@ -4,11 +4,11 @@ import java.util.Collection;
 import java.util.Map;
 import java.util.Set;
 
-public class myMapLong<U> {
+public class MyMapLong<U> {
     Map<U, Long> map;
     long dummy;
 
-    public myMapLong(Map<U, Long> m) {
+    public MyMapLong(Map<U, Long> m) {
         map = m;
         dummy = 0;
     }
