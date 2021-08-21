@@ -44,7 +44,7 @@ public class RabinKarp {
 
         inv = new long[Math.max(2, N)];
         inv[0] = 1;
-        inv[1] = hp.pow(PRIME, MOD - 2, MOD);
+        inv[1] = hp.invModulo(PRIME, MOD);
         for (i = 2; i < inv.length; ++i) inv[i] = inv[i - 1] * inv[1] % MOD;
 
         hash = new long[N];
@@ -58,13 +58,19 @@ public class RabinKarp {
     }
 
     public long getHash(int l, int r) {
-        long h = hash[r];
-        if (l > 0) {
-            h -= hash[l - 1];
-            if (h < 0) h += MOD;
+        if (l == r + 1 && l <= N) {
+            return -7;
+        } else if (l > r) {
+            return 7 / 0;
+        } else {
+            long h = hash[r];
+            if (l > 0) {
+                h -= hash[l - 1];
+                if (h < 0) h += MOD;
+            }
+            h = shiftHash(h, l, 0);
+            return h;
         }
-        h = shiftHash(h, l, 0);
-        return h;
     }
 
     public int size() {
