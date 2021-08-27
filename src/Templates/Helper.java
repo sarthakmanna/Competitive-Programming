@@ -261,6 +261,70 @@ public class Helper {
         return pow(num, MOD - 2, MOD);
     }
 
+    public long floorDiv(long num, long den) {
+        if (num >= 0) {
+            if (den >= 0) {
+                return num / den;
+            } else {
+                return (num - den - 1) / den;
+            }
+        } else {
+            if (den >= 0) {
+                return (num - den + 1) / den;
+            } else {
+                return num / den;
+            }
+        }
+    }
+
+    public long ceilDiv(long num, long den) {
+        if (num >= 0) {
+            if (den >= 0) {
+                return (num + den - 1) / den;
+            } else {
+                return num / den;
+            }
+        } else {
+            if (den >= 0) {
+                return num / den;
+            } else {
+                return (num + den + 1) / den;
+            }
+        }
+    }
+
+    public int floorDiv(int num, int den) {
+        if (num >= 0) {
+            if (den >= 0) {
+                return num / den;
+            } else {
+                return (num - den - 1) / den;
+            }
+        } else {
+            if (den >= 0) {
+                return (num - den + 1) / den;
+            } else {
+                return num / den;
+            }
+        }
+    }
+
+    public int ceilDiv(int num, int den) {
+        if (num >= 0) {
+            if (den >= 0) {
+                return (num + den - 1) / den;
+            } else {
+                return num / den;
+            }
+        } else {
+            if (den >= 0) {
+                return num / den;
+            } else {
+                return (num + den + 1) / den;
+            }
+        }
+    }
+
     public int getRandomInRange(int l, int r) {
         return rnd.nextInt(r - l + 1) + l;
     }

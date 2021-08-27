@@ -38,7 +38,7 @@ public class Dijkstra {
             dist[node] = d;
 
             for (Edge e : graph[node]) {
-                if(!visited[e.getOtherNode(node)]) {
+                if (!visited[e.getOtherNode(node)]) {
                     Pair tmp = new Pair(e.getOtherNode(node), d + e.getWeight());
                     pq.add(tmp);
                 }
