@@ -41,12 +41,12 @@ public class SegmentTree {
     public long lazyToLazy(long a, long b) {
         return a + b;
     }
-    public long lazyToNode(long a, int l, int r) {
-        return a * (r - l + 1);
+    public long lazyToNode(long nv, long lv, int l, int r) {
+        return nv + lv * (r - l + 1);
     }
 
     public void pushDown(int i, int l, int r) {
-        tree[i] = nodeToNode(tree[i], lazyToNode(lazy[i], l, r));
+        tree[i] = lazyToNode(tree[i], lazy[i], l, r);
         if (i * 2 + 1 < tree.length) {
             lazy[i * 2 + 1] = lazyToLazy(lazy[i * 2 + 1], lazy[i]);
             lazy[i * 2 + 2] = lazyToLazy(lazy[i * 2 + 2], lazy[i]);
@@ -56,7 +56,7 @@ public class SegmentTree {
 
     public void pointUpdate(int i, long val) {
         i += N - 1;
-        tree[i] = val;
+        tree[i] += val;
         i = i - 1 >> 1;
         while (i >= 0) {
             tree[i] = nodeToNode(tree[i * 2 + 1], tree[i * 2 + 2]);

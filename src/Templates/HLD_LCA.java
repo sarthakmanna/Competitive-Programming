@@ -58,6 +58,10 @@ public class HLD_LCA {
         return segRoot;
     }
 
+    public void setSt(SegmentTree st) {
+        this.st = st;
+    }
+
     int[] depth, parent, chCount, queue;
     int N, root;
     long[] weight;
@@ -181,15 +185,15 @@ public class HLD_LCA {
         buildSegmentTree();
     }
 
-    // Override this function if required
-    private void buildSegmentTree() {
-        long[] respectiveWeights = new long[N];
-        for (int i = 0; i < N; ++i)
-            respectiveWeights[i] = weight[linearTree[i]];
-        st = new SegmentTree(respectiveWeights, 0, 0);
+    // Override these functions if required.
+    public void buildSegmentTree() {
+        long[] respectiveWeights = new long[getN()];
+        for (int i = 0; i < getN(); ++i)
+            respectiveWeights[i] = getWeight()[getLinearTree()[i]];
+        setSt(new SegmentTree(respectiveWeights, 0, 0));
     }
     public long operate(long a, long b) {
-        return st.nodeToNode(a, b);
+        return getSt().nodeToNode(a, b);
     }
 
     public long pathQuery(int node1, int node2) {
