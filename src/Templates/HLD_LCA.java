@@ -111,10 +111,6 @@ public class HLD_LCA {
         HLDify();
     }
 
-    public long operate(long a, long b) {
-        return a + b;
-    }
-
     private void iterativeDFS() {
         parent = new int[N];
         depth = new int[N];
@@ -153,6 +149,7 @@ public class HLD_LCA {
         Stack<Integer> stack = new Stack<>();
         stack.ensureCapacity(N << 1);
         stack.push(root);
+
         for (i = 0; !stack.isEmpty(); ++i) {
             int node = stack.pop();
             if (i == 0 || linearTree[i - 1] != parent[node])
@@ -181,10 +178,18 @@ public class HLD_LCA {
                     stack.push(itr);
         }
 
+        buildSegmentTree();
+    }
+
+    // Override this function if required
+    private void buildSegmentTree() {
         long[] respectiveWeights = new long[N];
-        for (i = 0; i < N; ++i)
+        for (int i = 0; i < N; ++i)
             respectiveWeights[i] = weight[linearTree[i]];
         st = new SegmentTree(respectiveWeights, 0, 0);
+    }
+    public long operate(long a, long b) {
+        return st.nodeToNode(a, b);
     }
 
     public long pathQuery(int node1, int node2) {
