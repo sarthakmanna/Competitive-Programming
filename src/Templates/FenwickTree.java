@@ -28,6 +28,7 @@ public class FenwickTree {
     }
 
     public long query(int l, int r) {
+        if (l > r) return 0;
         long ret = prefixQuery(r);
         if (l > 0) ret -= prefixQuery(l - 1);
         return ret;
