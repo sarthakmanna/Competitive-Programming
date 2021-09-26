@@ -40,6 +40,12 @@ public class FastReader {
         return sb.toString();
     }
 
+    public char nextChar() {
+        int c;
+        for (c = scan(); c <= 32; c = scan()) ;
+        return (char) c;
+    }
+
     public int nextInt() {
         int c, val = 0;
         for (c = scan(); c <= 32; c = scan()) ;
