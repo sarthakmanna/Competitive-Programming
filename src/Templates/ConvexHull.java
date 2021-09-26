@@ -5,8 +5,16 @@ import java.util.Arrays;
 
 public class ConvexHull {
     Point[] P;
+    boolean includeLinear;
 
     public ConvexHull(Point[] p) {
+        includeLinear = false;
+        P = p.clone();
+        Arrays.sort(P);
+    }
+
+    public ConvexHull(Point[] p, boolean incLinear) {
+        includeLinear = incLinear;
         P = p.clone();
         Arrays.sort(P);
     }
@@ -15,12 +23,20 @@ public class ConvexHull {
         return (A.x - O.x) * (B.y - O.y) - (A.y - O.y) * (B.x - O.x);
     }
 
+    public boolean needToPop(Point prev, Point curr, Point toAdd) {
+        if (includeLinear) {
+            return cross(prev, curr, toAdd) < 0;
+        } else {
+            return cross(prev, curr, toAdd) <= 0;
+        }
+    }
+
     public ArrayDeque<Point> buildLowerHull() {
         ArrayDeque<Point> hull = new ArrayDeque<>();
         Point last = null, secondLast = null;
 
         for (int i = 0; i < P.length; ++i) {
-            while (last != null && secondLast != null && cross(secondLast, last, P[i]) <= 0) {
+            while (last != null && secondLast != null && needToPop(secondLast, last, P[i])) {
                 last = secondLast;
                 secondLast = hull.pollLast();
             }
@@ -39,7 +55,7 @@ public class ConvexHull {
         Point last = null, secondLast = null;
 
         for (int i = P.length - 1; i >= 0; --i) {
-            while (last != null && secondLast != null && cross(secondLast, last, P[i]) <= 0) {
+            while (last != null && secondLast != null && needToPop(secondLast, last, P[i])) {
                 last = secondLast;
                 secondLast = hull.pollLast();
             }
