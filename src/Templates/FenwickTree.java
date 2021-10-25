@@ -1,5 +1,7 @@
 package Templates;
 
+import java.util.ArrayList;
+
 public class FenwickTree {
     int N;
     long[] tree;
@@ -32,5 +34,11 @@ public class FenwickTree {
         long ret = prefixQuery(r);
         if (l > 0) ret -= prefixQuery(l - 1);
         return ret;
+    }
+
+    public String toString() {
+        ArrayList<Long> toStr = new ArrayList<>();
+        for (int i = 0; i < N; ++i) toStr.add(query(i, i));
+        return toStr.toString();
     }
 }

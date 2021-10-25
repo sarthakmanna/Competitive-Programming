@@ -1,5 +1,6 @@
 package Templates;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 
 public class SegmentTree {
@@ -101,6 +102,8 @@ public class SegmentTree {
     }
 
     public String toString() {
-        return "SegTree = " + Arrays.toString(tree) + ", " + Arrays.toString(lazy);
+        ArrayList<Long> toStr = new ArrayList<>();
+        for (int i = 0; i < N; ++i) toStr.add(rangeQuery(i, i));
+        return toStr.toString();
     }
 }

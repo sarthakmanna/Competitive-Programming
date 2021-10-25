@@ -39,16 +39,17 @@ public class DSU {
         return getParent(a) == getParent(b);
     }
 
-    public void addEdge(int a, int b) {
+    public boolean addEdge(int a, int b) {
         a = getParent(a); b = getParent(b);
         if (a == b) {
-            return;
+            return false;
         } else if (size[a] > size[b]) {
             a ^= b; b ^= a; a ^= b;
         }
         parent[a] = b;
         size[b] += size[a];
         size[a] = -7;
+        return true;
     }
 
 }

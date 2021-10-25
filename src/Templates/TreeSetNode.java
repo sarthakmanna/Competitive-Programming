@@ -1,16 +1,16 @@
 package Templates;
 
-public class NodeLong {
-    NodeLong parent, left, right;
+public class TreeSetNode {
+    TreeSetNode parent, left, right;
     long value;
     int size, height;
 
-    NodeLong(long v) {
+    TreeSetNode(long v) {
         value = v;
         size = height = 1;
     }
 
-    NodeLong finalisePosition(NodeLong root) {
+    TreeSetNode finalisePosition(TreeSetNode root) {
         int lheight = findDepth(left), rheight = findDepth(right);
 
         if (lheight > rheight + 1) {
@@ -28,8 +28,8 @@ public class NodeLong {
         return root;
     }
 
-    NodeLong rotateRight(NodeLong root) {
-        NodeLong A = this, B = left, P = parent;
+    TreeSetNode rotateRight(TreeSetNode root) {
+        TreeSetNode A = this, B = left, P = parent;
 
         if (P != null) {
             if (P.left == this) P.left = B;
@@ -49,8 +49,8 @@ public class NodeLong {
         return root;
     }
 
-    NodeLong rotateLeft(NodeLong root) {
-        NodeLong A = this, B = right, P = parent;
+    TreeSetNode rotateLeft(TreeSetNode root) {
+        TreeSetNode A = this, B = right, P = parent;
 
         if (P != null) {
             if (P.left == this) P.left = B;
@@ -79,15 +79,15 @@ public class NodeLong {
         return size;
     }
 
-    static int findDepth(NodeLong node) {
+    static int findDepth(TreeSetNode node) {
         return node == null ? 0 : node.height;
     }
 
-    static int findSize(NodeLong node) {
+    static int findSize(TreeSetNode node) {
         return node == null ? 0 : node.size();
     }
 
-    public int compareTo(NodeLong node) {
+    public int compareTo(TreeSetNode node) {
         return Long.compare(value, node.value);
     }
 

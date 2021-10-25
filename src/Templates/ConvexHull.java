@@ -4,26 +4,27 @@ import java.util.ArrayDeque;
 import java.util.Arrays;
 
 public class ConvexHull {
-    Point[] P;
+    Pair<Long, Long>[] P;
     boolean includeLinear;
 
-    public ConvexHull(Point[] p) {
+    public ConvexHull(Pair<Long, Long>[] p) {
         includeLinear = false;
         P = p.clone();
         Arrays.sort(P);
     }
 
-    public ConvexHull(Point[] p, boolean incLinear) {
+    public ConvexHull(Pair<Long, Long>[] p, boolean incLinear) {
         includeLinear = incLinear;
         P = p.clone();
         Arrays.sort(P);
     }
 
-    public long cross(Point O, Point A, Point B) {
-        return (A.x - O.x) * (B.y - O.y) - (A.y - O.y) * (B.x - O.x);
+    public long cross(Pair<Long, Long> O, Pair<Long, Long> A, Pair<Long, Long> B) {
+        return (A.getFirst() - O.getFirst()) * (B.getSecond() - O.getSecond())
+                - (A.getSecond() - O.getSecond()) * (B.getFirst() - O.getFirst());
     }
 
-    public boolean needToPop(Point prev, Point curr, Point toAdd) {
+    public boolean needToPop(Pair<Long, Long> prev, Pair<Long, Long> curr, Pair<Long, Long> toAdd) {
         if (includeLinear) {
             return cross(prev, curr, toAdd) < 0;
         } else {
@@ -31,9 +32,9 @@ public class ConvexHull {
         }
     }
 
-    public ArrayDeque<Point> buildLowerHull() {
-        ArrayDeque<Point> hull = new ArrayDeque<>();
-        Point last = null, secondLast = null;
+    public ArrayDeque<Pair<Long, Long>> buildLowerHull() {
+        ArrayDeque<Pair<Long, Long>> hull = new ArrayDeque<>();
+        Pair<Long, Long> last = null, secondLast = null;
 
         for (int i = 0; i < P.length; ++i) {
             while (last != null && secondLast != null && needToPop(secondLast, last, P[i])) {
@@ -50,9 +51,9 @@ public class ConvexHull {
         return hull;
     }
 
-    public ArrayDeque<Point> buildUpperHull() {
-        ArrayDeque<Point> hull = new ArrayDeque<>();
-        Point last = null, secondLast = null;
+    public ArrayDeque<Pair<Long, Long>> buildUpperHull() {
+        ArrayDeque<Pair<Long, Long>> hull = new ArrayDeque<>();
+        Pair<Long, Long> last = null, secondLast = null;
 
         for (int i = P.length - 1; i >= 0; --i) {
             while (last != null && secondLast != null && needToPop(secondLast, last, P[i])) {
