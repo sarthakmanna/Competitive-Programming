@@ -2,11 +2,11 @@ package Templates;
 
 public class TreeSetNode {
     TreeSetNode parent, left, right;
-    long value;
+    long value, sum;
     int size, height;
 
     TreeSetNode(long v) {
-        value = v;
+        sum = value = v;
         size = height = 1;
     }
 
@@ -71,6 +71,7 @@ public class TreeSetNode {
     }
 
     void setParameters() {
+        sum = value + findSum(left) + findSum(right);
         size = 1 + findSize(left) + findSize(right);
         height = 1 + Math.max(findDepth(left), findDepth(right));
     }
@@ -79,12 +80,20 @@ public class TreeSetNode {
         return size;
     }
 
+    long getSum() {
+        return sum;
+    }
+
     static int findDepth(TreeSetNode node) {
         return node == null ? 0 : node.height;
     }
 
     static int findSize(TreeSetNode node) {
         return node == null ? 0 : node.size();
+    }
+
+    static long findSum(TreeSetNode node) {
+        return node == null ? 0 : node.getSum();
     }
 
     public int compareTo(TreeSetNode node) {

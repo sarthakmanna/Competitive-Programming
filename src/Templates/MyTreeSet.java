@@ -61,8 +61,12 @@ public class MyTreeSet implements Iterable<Long> {
         else return navigateTo(root, index).value;
     }
 
-    public int countFloorNodeLongs(long value) {
-        return countFloorNodeLongs(root, new TreeSetNode(value));
+    public int countFloorNodes(long value) {
+        return countFloorNodes(root, new TreeSetNode(value));
+    }
+
+    public long sumUpFloorNodes(long value) {
+        return sumUpFloorNodes(root, new TreeSetNode(value));
     }
 
     public int size() {
@@ -240,12 +244,20 @@ public class MyTreeSet implements Iterable<Long> {
         return navigateTo(node.right, ind);
     }
 
-    private int countFloorNodeLongs(TreeSetNode node, TreeSetNode key) {
+    private int countFloorNodes(TreeSetNode node, TreeSetNode key) {
         if (node == null) return 0;
         else if (node.compareTo(key) > 0)
-            return countFloorNodeLongs(node.left, key);
+            return countFloorNodes(node.left, key);
         else
-            return TreeSetNode.findSize(node.left) + 1 + countFloorNodeLongs(node.right, key);
+            return TreeSetNode.findSize(node.left) + 1 + countFloorNodes(node.right, key);
+    }
+
+    private long sumUpFloorNodes(TreeSetNode node, TreeSetNode key) {
+        if (node == null) return 0;
+        else if (node.compareTo(key) > 0)
+            return sumUpFloorNodes(node.left, key);
+        else
+            return TreeSetNode.findSum(node.left) + node.value + sumUpFloorNodes(node.right, key);
     }
 
     private TreeSetNode prev(TreeSetNode node) {
