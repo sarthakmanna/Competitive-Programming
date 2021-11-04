@@ -24,12 +24,12 @@ public class SegmentTree {
         DEFAULT_NODE = def_node; DEFAULT_LAZY = def_lazy;
         N = 1;
         while (N < ar.length) N <<= 1;
-        tree = new long[N * 2 - 1]; Arrays.fill(tree, DEFAULT_NODE);
-        lazy = new long[N * 2 - 1]; Arrays.fill(lazy, DEFAULT_LAZY);
+        tree = new long[N << 1]; Arrays.fill(tree, DEFAULT_NODE);
+        lazy = new long[N << 1]; Arrays.fill(lazy, DEFAULT_LAZY);
 
-        for (int i = 0; i < ar.length; ++i) tree[i + N - 1] = ar[i];
-        for (int i = N - 2; i >= 0; --i) {
-            tree[i] = nodeToNode(tree[i * 2 + 1], tree[i * 2 + 2]);
+        for (int i = 0; i < ar.length; ++i) tree[i + N] = ar[i];
+        for (int i = N - 1; i > 0; --i) {
+            tree[i] = nodeToNode(tree[i << 1], tree[i << 1 | 1]);
         }
     }
 
@@ -48,29 +48,30 @@ public class SegmentTree {
 
     public void pushDown(int i, int l, int r) {
         tree[i] = lazyToNode(tree[i], lazy[i], l, r);
-        if (i * 2 + 1 < tree.length) {
-            lazy[i * 2 + 1] = lazyToLazy(lazy[i * 2 + 1], lazy[i]);
-            lazy[i * 2 + 2] = lazyToLazy(lazy[i * 2 + 2], lazy[i]);
+        if (i << 1 < tree.length) {
+            lazy[i << 1] = lazyToLazy(lazy[i << 1], lazy[i]);
+            lazy[i << 1 | 1] = lazyToLazy(lazy[i << 1 | 1], lazy[i]);
         }
         lazy[i] = DEFAULT_LAZY;
     }
 
     public void pointUpdate(int i, long val) {
-        i += N - 1;
-        tree[i] += val;
-        i = i - 1 >> 1;
-        while (i >= 0) {
-            tree[i] = nodeToNode(tree[i * 2 + 1], tree[i * 2 + 2]);
-            i = i - 1 >> 1;
+        int idx = i + N;
+        tree[idx] = nodeToNode(tree[idx], val);
+        idx >>= 1;
+
+        while (idx > 0) {
+            tree[idx] = nodeToNode(tree[idx << 1], tree[idx << 1 | 1]);
+            idx >>= 1;
         }
     }
 
     public void rangeUpdate(int l, int r, long val) {
-        update(0, 0, N - 1, l, r, val);
+        update(1, 0, N - 1, l, r, val);
     }
 
     public long rangeQuery(int l, int r) {
-        return query(0, 0, N - 1, l, r);
+        return query(1, 0, N - 1, l, r);
     }
 
 
@@ -82,11 +83,11 @@ public class SegmentTree {
             lazy[i] = lazyToLazy(lazy[i], val);
             pushDown(i, l, r);
         } else {
-            update(i2 + 1, l, mid, ql, qr, val);
-            update(i2 + 2, mid + 1, r, ql, qr, val);
+            update(i2, l, mid, ql, qr, val);
+            update(i2 | 1, mid + 1, r, ql, qr, val);
 
             // Rebuild tree[i] if necessary
-            tree[i] = nodeToNode(tree[i2 + 1], tree[i2 + 2]);
+            tree[i] = nodeToNode(tree[i2], tree[i2 | 1]);
         }
     }
 
@@ -96,8 +97,8 @@ public class SegmentTree {
         if (l > qr || r < ql) return DEFAULT_NODE;
         else if (l >= ql && r <= qr) return tree[i];
         else {
-            return nodeToNode(query(i2 + 1, l, mid, ql, qr),
-                    query(i2 + 2, mid + 1, r, ql, qr));
+            return nodeToNode(query(i2, l, mid, ql, qr),
+                    query(i2 | 1, mid + 1, r, ql, qr));
         }
     }
 

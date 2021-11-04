@@ -125,11 +125,27 @@ public class Helper {
     }
 
     public boolean getBitAtPosition(int num, int pos) {
-        return ((num >> pos) & 1) == 1;
+        return ((num >> pos) & 1) > 0;
     }
 
     public boolean getBitAtPosition(long num, int pos) {
-        return ((num >> pos) & 1) == 1;
+        return ((num >> pos) & 1) > 0;
+    }
+
+    public int setBitAtPosition(int num, int pos) {
+        return num | (1 << pos);
+    }
+
+    public long setBitAtPosition(long num, int pos) {
+        return num | (1l << pos);
+    }
+
+    public int clearBitAtPosition(int num, int pos) {
+        return (Integer.MAX_VALUE ^ (1 << pos)) & num;
+    }
+
+    public long clearBitAtPosition(long num, int pos) {
+        return (Long.MAX_VALUE ^ (1l << pos)) & num;
     }
 
     public long gcd(long a, long b) {
@@ -140,20 +156,19 @@ public class Helper {
         return b == 0 ? a : gcd(b, a % b);
     }
 
-    public long lcm(long a, long b) {
-        return a * b / gcd(a, b);
-    }
-
     public long gcd(long... ar) {
         long ret = ar[0];
         for (long itr : ar) ret = gcd(ret, itr);
         return ret;
     }
-
     public int gcd(int... ar) {
         int ret = ar[0];
         for (int itr : ar) ret = gcd(ret, itr);
         return ret;
+    }
+
+    public long lcm(long a, long b) {
+        return a * b / gcd(a, b);
     }
 
     public long lcm(long... ar) {
