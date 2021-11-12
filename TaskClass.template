@@ -11,8 +11,31 @@ import %OutputClassFQN%;
 public class %TaskClass% {
     final static Helper hp = new Helper();
 
-    public void solve(int testNumber, %InputClass% in, %OutputClass% out) {
-        int i, j, k;
+    public void fillInputParams(%InputClass% in) {
 
+    }
+
+    String solveOptimised(%InputClass% in) {
+        return "";
+    }
+
+    String solveBrute(%InputClass% in) {
+        return null;
+    }
+
+    public void solve(int testNumber, %InputClass% in, %OutputClass% out) {
+        // out.print("Case #" + testNumber + ": ");
+
+        fillInputParams(in);
+        String outOptimised = solveOptimised(in);
+        String outBrute = solveBrute(in);
+        if (outBrute == null || outBrute.equals(outOptimised)) {
+            out.print(outOptimised);
+        } else {
+            // print input params
+            System.err.print("Actual = " + outOptimised);
+            System.err.print("Expected = " + outBrute);
+            System.err.print(7 / 0);
+        }
     }
 }
