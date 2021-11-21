@@ -46,6 +46,17 @@ public class MyMapLong<U> {
         }
     }
 
+    public void addModulo(U key, long val, long MOD) {
+        long newVal = (get(key) + val) % MOD;
+        if (newVal < 0) newVal += MOD;
+
+        if (newVal == dummy) {
+            remove(key);
+        } else {
+            put(key, newVal);
+        }
+    }
+
     public Set<Map.Entry<U, Long>> entrySet() {
         return map.entrySet();
     }

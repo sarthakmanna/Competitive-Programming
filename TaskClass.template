@@ -29,8 +29,10 @@ public class %TaskClass% {
         fillInputParams(in);
         String outOptimised = solveOptimised(in);
         String outBrute = solveBrute(in);
-        if (outBrute == null || outBrute.equals(outOptimised)) {
+        if (outBrute == null) {
             out.print(outOptimised);
+        } else if (outBrute.equals(outOptimised)) {
+            System.out.println("OK Checked");
         } else {
             // print input params
             System.err.print("Actual = " + outOptimised);
