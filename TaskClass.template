@@ -15,11 +15,11 @@ public class %TaskClass% {
 
     }
 
-    String solveOptimised(%InputClass% in) {
+    Object solveOptimised(%InputClass% in) {
         return "";
     }
 
-    String solveBrute(%InputClass% in) {
+    Object solveBrute(%InputClass% in) {
         return null;
     }
 
@@ -27,16 +27,16 @@ public class %TaskClass% {
         // out.print("Case #" + testNumber + ": ");
 
         fillInputParams(in);
-        String outOptimised = solveOptimised(in);
-        String outBrute = solveBrute(in);
+        Object outOptimised = solveOptimised(in);
+        Object outBrute = solveBrute(in);
         if (outBrute == null) {
-            out.print(outOptimised);
-        } else if (outBrute.equals(outOptimised)) {
+            out.println(outOptimised);
+        } else if (outBrute.toString().equals(outOptimised.toString())) {
             System.out.println("OK Checked");
         } else {
             // print input params
-            System.err.print("Actual = " + outOptimised);
-            System.err.print("Expected = " + outBrute);
+            System.err.println("Actual = " + outOptimised);
+            System.err.println("Expected = " + outBrute);
             System.err.print(7 / 0);
         }
     }

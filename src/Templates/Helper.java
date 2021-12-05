@@ -261,6 +261,54 @@ public class Helper {
         }
     }
 
+    public int[] getIndexArrayInt(int size) {
+        int[] ret = new int[size];
+        for (int i = 0; i < size; ++i) ret[i] = i;
+        return ret;
+    }
+
+    public Integer[] getIndexArrayInteger(int size) {
+        Integer[] ret = new Integer[size];
+        for (int i = 0; i < size; ++i) ret[i] = i;
+        return ret;
+    }
+
+    public void swap(int a, int b, int[] ar) {
+        int temp = ar[a]; ar[a] = ar[b]; ar[b] = temp;
+    }
+
+    public void swap(int a, int b, Integer[] ar) {
+        Integer temp = ar[a]; ar[a] = ar[b]; ar[b] = temp;
+    }
+
+    public boolean isSorted(int[] ar) {
+        for (int i = 1; i < ar.length; ++i) if (ar[i - 1] > ar[i]) {
+            return false;
+        }
+        return true;
+    }
+
+    public boolean isReverseSorted(int[] ar) {
+        for (int i = 1; i < ar.length; ++i) if (ar[i - 1] < ar[i]) {
+            return false;
+        }
+        return true;
+    }
+
+    public boolean isSorted(long[] ar) {
+        for (int i = 1; i < ar.length; ++i) if (ar[i - 1] > ar[i]) {
+            return false;
+        }
+        return true;
+    }
+
+    public boolean isReverseSorted(long[] ar) {
+        for (int i = 1; i < ar.length; ++i) if (ar[i - 1] < ar[i]) {
+            return false;
+        }
+        return true;
+    }
+
     public long pow(long base, long exp, long MOD) {
         base %= MOD;
         long ret = 1;
