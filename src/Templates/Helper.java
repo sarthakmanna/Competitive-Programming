@@ -20,6 +20,7 @@ public class Helper {
     }
 
     public int[] getSieve() {
+        if (sieve == null || sieve.length < MAXN) setSieve();
         return sieve;
     }
 
@@ -40,7 +41,7 @@ public class Helper {
                 if (sieve[i] == 0) {
                     primes.add(i);
                     for (j = i; j < MAXN; j += i) {
-                        sieve[j] = i;
+                        if (sieve[j] == 0) sieve[j] = i;
                     }
                 }
             }
