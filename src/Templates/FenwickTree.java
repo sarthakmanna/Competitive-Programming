@@ -38,7 +38,7 @@ public class FenwickTree {
 
     public String toString() {
         ArrayList<Long> toStr = new ArrayList<>();
-        for (int i = 0; i < N; ++i) toStr.add(query(i, i));
+        for (int i = 0; i < N - 1; ++i) toStr.add(query(i, i));
         return toStr.toString();
     }
 }
