@@ -118,7 +118,7 @@ public class Helper {
     }
 
     public long ncr(int n, int r) {
-        if (r > n) return 0;
+        if (r > n || r < 0) return 0;
         if (factorial == null) setFactorial();
         long numerator = factorial[n];
         long denominator = factorial[r] * factorial[n - r] % MOD;
