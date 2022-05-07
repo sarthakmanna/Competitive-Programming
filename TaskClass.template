@@ -15,11 +15,11 @@ public class %TaskClass% {
 
     }
 
-    Object solveOptimised(%InputClass% in) {
-        return "";
+    Object solveOptimised(%InputClass% in, StringBuilder sb) {
+        return sb;
     }
 
-    Object solveBrute(%InputClass% in) {
+    Object solveBrute(%InputClass% in, StringBuilder sb) {
         return null;
     }
 
@@ -27,8 +27,8 @@ public class %TaskClass% {
         // out.print("Case #" + testNumber + ": ");
 
         fillInputParams(in);
-        Object outOptimised = solveOptimised(in);
-        Object outBrute = solveBrute(in);
+        Object outOptimised = solveOptimised(in, new StringBuilder());
+        Object outBrute = solveBrute(in, new StringBuilder());
         if (outBrute == null) {
             out.println(outOptimised);
         } else if (outBrute.toString().equals(outOptimised.toString())) {
