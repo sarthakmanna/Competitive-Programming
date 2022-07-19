@@ -88,7 +88,6 @@ public class Helper {
             long x = pow(a, d, number);
 
             if (x == 1 || x == number - 1) {
-                continue;
             } else {
                 boolean witnessFound = false;
                 for (int i = 1; i < r && x > 1; ++i) { // loop runs r - 1 times atmost
@@ -104,12 +103,31 @@ public class Helper {
         return true;
     }
 
-    public static long[] factorial;
+    public static long[] factorial, invFactorial, invNaturalNum;
 
     public void setFactorial() {
         factorial = new long[MAXN];
         factorial[0] = 1;
-        for (int i = 1; i < MAXN; ++i) factorial[i] = factorial[i - 1] * i % MOD;
+        for (int i = 1; i < MAXN; ++i) {
+            factorial[i] = factorial[i - 1] * i % MOD;
+        }
+    }
+
+    public void setInvNaturalNum() {
+        invNaturalNum = new long[MAXN];
+        invNaturalNum[0] = invNaturalNum[1] = 1;
+        for (int i = 2; i < MAXN; ++i) {
+            invNaturalNum[i] = invNaturalNum[(int) (MOD % i)] * (MOD - MOD / i) % MOD;
+        }
+    }
+
+    public void setInvFactorial() {
+        if (invNaturalNum == null) setInvNaturalNum();
+        invFactorial = new long[MAXN];
+        invFactorial[0] = 1;
+        for (int i = 1; i < MAXN; ++i) {
+            invFactorial[i] = invFactorial[i - 1] * invNaturalNum[i] % MOD;
+        }
     }
 
     public long getFactorial(int n) {
@@ -117,12 +135,23 @@ public class Helper {
         return factorial[n];
     }
 
+    public long getInvNaturalNum(int n) {
+        if (invNaturalNum == null) setInvNaturalNum();
+        return invNaturalNum[n];
+    }
+
+    public long getInvFactorial(int n) {
+        if (invFactorial == null) setInvFactorial();
+        return invFactorial[n];
+    }
+
     public long ncr(int n, int r) {
         if (r > n || r < 0) return 0;
         if (factorial == null) setFactorial();
+        if (invFactorial == null) setInvFactorial();
         long numerator = factorial[n];
-        long denominator = factorial[r] * factorial[n - r] % MOD;
-        return numerator * pow(denominator, MOD - 2, MOD) % MOD;
+        long invDenominator = invFactorial[r] * invFactorial[n - r] % MOD;
+        return numerator * invDenominator % MOD;
     }
 
     public boolean getBitAtPosition(int num, int pos) {
@@ -138,7 +167,7 @@ public class Helper {
     }
 
     public long setBitAtPosition(long num, int pos) {
-        return num | (1l << pos);
+        return num | (1L << pos);
     }
 
     public int clearBitAtPosition(int num, int pos) {
@@ -146,7 +175,7 @@ public class Helper {
     }
 
     public long clearBitAtPosition(long num, int pos) {
-        return (Long.MAX_VALUE ^ (1l << pos)) & num;
+        return (Long.MAX_VALUE ^ (1L << pos)) & num;
     }
 
     public long gcd(long a, long b) {
