@@ -135,12 +135,18 @@ public class Helper {
         return factorial[n];
     }
 
-    public long getInvNaturalNum(int n) {
-        if (invNaturalNum == null) setInvNaturalNum();
-        return invNaturalNum[n];
+    public long getInvModulo(long n) { // MOD must be prime
+        if (n >= MAXN) return pow(n, MOD - 2, MOD);
+        else if (invNaturalNum == null) setInvNaturalNum();
+        return invNaturalNum[(int) n];
     }
 
-    public long getInvFactorial(int n) {
+    public long getInvModulo(long n, long mod) { // mod must be prime
+        if (mod == MOD) return getInvModulo(n);
+        else return pow(n, mod - 2, mod);
+    }
+
+    public long getInvFactorial(int n) { // MOD must be prime
         if (invFactorial == null) setInvFactorial();
         return invFactorial[n];
     }
@@ -348,10 +354,6 @@ public class Helper {
             exp >>= 1;
         }
         return ret;
-    }
-
-    public long invModulo(long num, long MOD) { // MOD must be prime
-        return pow(num, MOD - 2, MOD);
     }
 
     public long floorDiv(long num, long den) {

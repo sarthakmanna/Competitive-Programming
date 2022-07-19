@@ -44,7 +44,7 @@ public class RabinKarp {
 
         inv = new long[Math.max(2, N)];
         inv[0] = 1;
-        inv[1] = hp.invModulo(PRIME, MOD);
+        inv[1] = hp.getInvModulo(PRIME, MOD);
         for (i = 2; i < inv.length; ++i) inv[i] = inv[i - 1] * inv[1] % MOD;
 
         hash = new long[N];

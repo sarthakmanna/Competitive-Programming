@@ -77,7 +77,7 @@ public class Fraction {
     }
 
     public long modValue(long MOD) {
-        return getNum() % MOD * hp.invModulo(getDen(), MOD) % MOD;
+        return getNum() % MOD * hp.getInvModulo(getDen(), MOD) % MOD;
     }
 
     public String toString() {
