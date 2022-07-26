@@ -10,6 +10,8 @@ import %OutputClassFQN%;
 
 public class %TaskClass% {
     final static Helper hp = new Helper();
+    final boolean isDevEnv = System.getenv().get("USERDOMAIN") != null
+            && System.getenv().get("USERDOMAIN").equals("LAPTOP-DSSUKMC1");
 
     public void fillInputParams(%InputClass% in) {
 
