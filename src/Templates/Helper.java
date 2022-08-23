@@ -48,34 +48,37 @@ public class Helper {
         }
     }
 
-    public HashMap<Integer, Integer> primeFactorise(int num) {
+    public ArrayList<Integer> primeFactorise(int num) {
         setSieve();
-        HashMap<Integer, Integer> factors = new HashMap<>();
+        ArrayList<Integer> factors = new ArrayList<>();
         for (int prime : primes) {
             if (prime * prime <= num) {
-                int c = 0;
                 while (num % prime == 0) {
-                    ++c;
+                    factors.add(prime);
                     num /= prime;
                 }
-                if (c > 0) factors.put(prime, c);
             } else {
                 break;
             }
         }
-        if (num > 1) factors.put(num, 1);
+        if (num > 1) factors.add(num);
         return factors;
     }
 
-    public HashMap<Long, Integer> primeFactorise(long num, final int certainty) {
+    public ArrayList<Long> primeFactorise(long num, final int certainty) {
         setSieve();
-        HashMap<Long, Integer> factors = new HashMap<>();
+        ArrayList<Long> factors = new ArrayList<>();
         primeFactorise(num, certainty, factors);
         return factors;
     }
 
-    public void primeFactorise(long num, final int certainty, HashMap<Long, Integer> primeFactors) {
-        if (num <= 1) return;
+    public void primeFactorise(long num, final int certainty, ArrayList<Long> primeFactors) {
+        if (num <= 1) {
+            return;
+        } else if (isProbablePrime(num, certainty)) {
+            primeFactors.add(num);
+            return;
+        }
 
         int attempts = certainty;
         while (attempts-- > 0) {
@@ -86,48 +89,53 @@ public class Helper {
                 return;
             }
         }
-        primeFactors.put(num, primeFactors.getOrDefault(num, 0) + 1);
+        primeFactors.add(num);
     }
 
     public long getAnyFactor(long num, final int certainty) {
         setSieve();
-        if (num == 1) return 1;
+        if (num <= 1) return num;
         else if (num < MAXN) return sieve[(int) num];
 
         // Pollard's Rho algorithm to find a factor > MAXN
         // https://en.wikipedia.org/wiki/Pollard%27s_rho_algorithm
-        // Using g(x) = (x * x + 1) % n
-        if (isProbablePrime(num, certainty)) return num;
+        // Using g(x) = (x * x + c) % n
+        final long c = getRandomInRange(1, (int) Math.min(Integer.MAX_VALUE - 7, num - 1));
         long x = getRandomInRange(1, (int) Math.min(Integer.MAX_VALUE - 7, num - 1));
         long y = x;
         long d = 1;
         while (d == 1) {
-            x = moduloMultiply(x, x, num) + 1;
-            y = moduloMultiply(y, y, num) + 1;
-            y = moduloMultiply(y, y, num) + 1;
+            x = moduloMultiply(x, x, num) + c;
+            y = moduloMultiply(y, y, num) + c;
+            y = moduloMultiply(y, y, num) + c;
             d = gcd(Math.abs(x - y), num);
         }
         return d;
     }
 
     public ArrayList<Long> getAllFactors(long num, final int certainty) {
-        HashMap<Long, Integer> primeFactors = primeFactorise(num, certainty);
         ArrayList<Long> allFactors = new ArrayList<>();
-        fillAllFactors(0, new ArrayList<>(primeFactors.keySet()), 1, primeFactors, allFactors);
+
+        ArrayList<Long> primeFactors = primeFactorise(num, certainty);
+        Collections.sort(primeFactors);
+        fillAllFactors(0, 1, primeFactors, allFactors);
+
         return allFactors;
     }
 
-    public void fillAllFactors(int idx, ArrayList<Long> primes, long prodSoFar, HashMap<Long, Integer> primeFactored, ArrayList<Long> allFactors) {
-        if (idx == primes.size()) {
+    public void fillAllFactors(int idx, long prodSoFar, ArrayList<Long> primeFactors, ArrayList<Long> allFactors) {
+        if (idx >= primeFactors.size()) {
             allFactors.add(prodSoFar);
             return;
         }
 
-        fillAllFactors(idx + 1, primes, prodSoFar, primeFactored, allFactors);
-        long primeFactor = primes.get(idx);
-        int freq = primeFactored.get(primeFactor);
-        while (freq-- > 0) {
-            fillAllFactors(idx + 1, primes, prodSoFar *= primeFactor, primeFactored, allFactors);
+        final long primeFactor = primeFactors.get(idx);
+        int endIdx = idx + 1;
+        while (endIdx < primeFactors.size() && primeFactors.get(endIdx) == primeFactor) ++endIdx;
+
+        fillAllFactors(endIdx, prodSoFar, primeFactors, allFactors);
+        while (idx++ < endIdx) {
+            fillAllFactors(endIdx, prodSoFar *= primeFactor, primeFactors, allFactors);
         }
     }
 
@@ -486,7 +494,7 @@ public class Helper {
 
     public long moduloMultiply(long a, long b, long m) {
         long q = (long) ((double) a * b / m);
-        long r = a * b - q * m;
+        long r = (long) ((double) a * b - (double) q * m);
         return r < 0 ? r + m : r;
     }
 
