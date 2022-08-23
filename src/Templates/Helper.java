@@ -49,8 +49,8 @@ public class Helper {
     }
 
     public HashMap<Integer, Integer> primeFactorise(int num) {
-        HashMap<Integer, Integer> factors = new HashMap<>();
         setSieve();
+        HashMap<Integer, Integer> factors = new HashMap<>();
         for (int prime : primes) {
             if (prime * prime <= num) {
                 int c = 0;
@@ -67,14 +67,78 @@ public class Helper {
         return factors;
     }
 
+    public HashMap<Long, Integer> primeFactorise(long num, final int certainty) {
+        setSieve();
+        HashMap<Long, Integer> factors = new HashMap<>();
+        primeFactorise(num, certainty, factors);
+        return factors;
+    }
+
+    public void primeFactorise(long num, final int certainty, HashMap<Long, Integer> primeFactors) {
+        if (num <= 1) return;
+
+        int attempts = certainty;
+        while (attempts-- > 0) {
+            long factor = getAnyFactor(num, certainty);
+            if (factor < num) {
+                primeFactorise(factor, certainty, primeFactors);
+                primeFactorise(num / factor, certainty, primeFactors);
+                return;
+            }
+        }
+        primeFactors.put(num, primeFactors.getOrDefault(num, 0) + 1);
+    }
+
+    public long getAnyFactor(long num, final int certainty) {
+        setSieve();
+        if (num == 1) return 1;
+        else if (num < MAXN) return sieve[(int) num];
+
+        // Pollard's Rho algorithm to find a factor > MAXN
+        // https://en.wikipedia.org/wiki/Pollard%27s_rho_algorithm
+        // Using g(x) = (x * x + 1) % n
+        if (isProbablePrime(num, certainty)) return num;
+        long x = getRandomInRange(1, (int) Math.min(Integer.MAX_VALUE - 7, num - 1));
+        long y = x;
+        long d = 1;
+        while (d == 1) {
+            x = moduloMultiply(x, x, num) + 1;
+            y = moduloMultiply(y, y, num) + 1;
+            y = moduloMultiply(y, y, num) + 1;
+            d = gcd(Math.abs(x - y), num);
+        }
+        return d;
+    }
+
+    public ArrayList<Long> getAllFactors(long num, final int certainty) {
+        HashMap<Long, Integer> primeFactors = primeFactorise(num, certainty);
+        ArrayList<Long> allFactors = new ArrayList<>();
+        fillAllFactors(0, new ArrayList<>(primeFactors.keySet()), 1, primeFactors, allFactors);
+        return allFactors;
+    }
+
+    public void fillAllFactors(int idx, ArrayList<Long> primes, long prodSoFar, HashMap<Long, Integer> primeFactored, ArrayList<Long> allFactors) {
+        if (idx == primes.size()) {
+            allFactors.add(prodSoFar);
+            return;
+        }
+
+        fillAllFactors(idx + 1, primes, prodSoFar, primeFactored, allFactors);
+        long primeFactor = primes.get(idx);
+        int freq = primeFactored.get(primeFactor);
+        while (freq-- > 0) {
+            fillAllFactors(idx + 1, primes, prodSoFar *= primeFactor, primeFactored, allFactors);
+        }
+    }
+
     public boolean isPrime(int number) {
         setSieve();
         return number > 1 && sieve[number] == number;
     }
 
     // https://en.wikipedia.org/wiki/Miller%E2%80%93Rabin_primality_test
-    public boolean isProbablePrime(int number, int certainty) {
-        if (number < MAXN) return isPrime(number);
+    public boolean isProbablePrime(long number, int certainty) {
+        if (number < MAXN) return isPrime((int) number);
         else if ((number & 1) == 0) return false;
 
         long d = number - 1;
@@ -84,14 +148,14 @@ public class Helper {
             d >>= 1;
         }
         while (--certainty >= 0) { // witness loop
-            long a = getRandomInRange(2, Math.min(Integer.MAX_VALUE - 7, number - 2));
+            long a = getRandomInRange(2, (int) Math.min(Integer.MAX_VALUE - 7, number - 2));
             long x = pow(a, d, number);
 
             if (x == 1 || x == number - 1) {
             } else {
                 boolean witnessFound = false;
                 for (int i = 1; i < r && x > 1; ++i) { // loop runs r - 1 times atmost
-                    x = x * x % number;
+                    x = moduloMultiply(x, x, number);
                     if (x == number - 1) {
                         witnessFound = true;
                         break;
@@ -418,6 +482,12 @@ public class Helper {
                 return (num + den + 1) / den;
             }
         }
+    }
+
+    public long moduloMultiply(long a, long b, long m) {
+        long q = (long) ((double) a * b / m);
+        long r = a * b - q * m;
+        return r < 0 ? r + m : r;
     }
 
     public int getRandomInRange(int l, int r) {
