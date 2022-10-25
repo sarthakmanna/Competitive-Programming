@@ -52,7 +52,7 @@ public class Helper {
         setSieve();
         ArrayList<Integer> factors = new ArrayList<>();
         for (int prime : primes) {
-            if (prime * prime <= num) {
+            if (num >= MAXN && prime * prime <= num) {
                 while (num % prime == 0) {
                     factors.add(prime);
                     num /= prime;
@@ -61,7 +61,14 @@ public class Helper {
                 break;
             }
         }
-        if (num > 1) factors.add(num);
+        if (num < MAXN) {
+            while (num > 1) {
+                factors.add(sieve[num]);
+                num /= sieve[num];
+            }
+        } else {
+            factors.add(num);
+        }
         return factors;
     }
 
