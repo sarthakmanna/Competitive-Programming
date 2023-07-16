@@ -11,6 +11,13 @@ public class FenwickTree {
         tree = new long[N];
     }
 
+    public FenwickTree(long[] A) {
+        this(A.length);
+        for (int i = 0; i < A.length; ++i) {
+            update(i, A[i]);
+        }
+    }
+
     public void update(int idx, long val) {
         ++idx;
         while (idx < N) {
