@@ -1,6 +1,7 @@
 package Templates;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
 
 public class HLD_LCA {
     static final long defaultValue = 0;
@@ -129,9 +130,7 @@ public class HLD_LCA {
 
         while (st < end) {
             int node = queue[st++], h = depth[node] + 1;
-            Iterator<Integer> itr = graph[node].iterator();
-            while (itr.hasNext()) {
-                int ch = itr.next();
+            for (int ch : graph[node]) {
                 if (depth[ch] > 0) continue;
                 depth[ch] = h;
                 parent[ch] = node;
@@ -150,12 +149,12 @@ public class HLD_LCA {
         linearTree = new int[N];
         segRoot = new int[N];
 
-        Stack<Integer> stack = new Stack<>();
-        stack.ensureCapacity(N << 1);
-        stack.push(root);
+        int[] stack = new int[N];
+        int stackEnd = 0;
+        stack[stackEnd++] = root;
 
-        for (i = 0; !stack.isEmpty(); ++i) {
-            int node = stack.pop();
+        for (i = 0; stackEnd > 0; ++i) {
+            int node = stack[--stackEnd];
             if (i == 0 || linearTree[i - 1] != parent[node])
                 treeRoot = node;
             linearTree[i] = node;
@@ -179,7 +178,7 @@ public class HLD_LCA {
 
             for (int itr : graph[node])
                 if (parent[node] != itr)
-                    stack.push(itr);
+                    stack[stackEnd++] = itr;
         }
 
         buildSegmentTree();

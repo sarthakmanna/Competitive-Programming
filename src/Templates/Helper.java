@@ -525,25 +525,49 @@ public class Helper {
         }
     }
 
-    public String joinElements(long... ar) {
+    public String joinElementsNewLine(long... ar) {
+        StringBuilder sb = new StringBuilder();
+        for (long itr : ar) sb.append(itr).append("\n");
+        return sb.toString().trim();
+    }
+
+    public String joinElementsNewLine(int... ar) {
+        StringBuilder sb = new StringBuilder();
+        for (int itr : ar) sb.append(itr).append("\n");
+        return sb.toString().trim();
+    }
+
+    public String joinElementsNewLine(String... ar) {
+        StringBuilder sb = new StringBuilder();
+        for (String itr : ar) sb.append(itr).append("\n");
+        return sb.toString().trim();
+    }
+
+    public String joinElementsNewLine(Object... ar) {
+        StringBuilder sb = new StringBuilder();
+        for (Object itr : ar) sb.append(itr).append("\n");
+        return sb.toString().trim();
+    }
+
+    public String joinElementsSpaced(long... ar) {
         StringBuilder sb = new StringBuilder();
         for (long itr : ar) sb.append(itr).append(" ");
         return sb.toString().trim();
     }
 
-    public String joinElements(int... ar) {
+    public String joinElementsSpaced(int... ar) {
         StringBuilder sb = new StringBuilder();
         for (int itr : ar) sb.append(itr).append(" ");
         return sb.toString().trim();
     }
 
-    public String joinElements(String... ar) {
+    public String joinElementsSpaced(String... ar) {
         StringBuilder sb = new StringBuilder();
         for (String itr : ar) sb.append(itr).append(" ");
         return sb.toString().trim();
     }
 
-    public String joinElements(Object... ar) {
+    public String joinElementsSpaced(Object... ar) {
         StringBuilder sb = new StringBuilder();
         for (Object itr : ar) sb.append(itr).append(" ");
         return sb.toString().trim();
