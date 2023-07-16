@@ -31,6 +31,10 @@ public class RabinKarp {
     long[] hash, pow, inv;
     Helper hp = new Helper();
 
+    public RabinKarp(char[] S) {
+        this(S, 59, 777767777);
+    }
+
     public RabinKarp(char[] S, long P, long M) { // M must be a prime number
         PRIME = P;
         MOD = M;
