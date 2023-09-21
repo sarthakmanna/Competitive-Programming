@@ -57,9 +57,17 @@ abstract public class Centroid_Decomposition {
     }
 
     public int findCentroid(int node, int par, final int targetSz) {
-        for (int itr : graph[node]) if (itr != par && childCount[itr] > targetSz) {
-            return findCentroid(itr, node, targetSz);
-        }
+        boolean again;
+        do {
+            again = false;
+            for (int itr : graph[node])
+                if (itr != par && childCount[itr] > targetSz) {
+                    par = node;
+                    node = itr;
+                    again = true;
+                    break;
+                }
+        } while (again);
         return node;
     }
 }
