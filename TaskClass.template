@@ -5,13 +5,13 @@ import java.util.*;
 import java.math.*;
 
 import Templates.Helper;
+import Templates.Logger;
 import %InputClassFQN%;
 import %OutputClassFQN%;
 
 public class %TaskClass% {
     final static Helper hp = new Helper();
-    final boolean isDevEnv = System.getenv().get("USERDOMAIN") != null
-            && System.getenv().get("USERDOMAIN").equals("LAPTOP-DSSUKMC1");
+    final static Logger lg = new Logger();
 
     public void fillInputParams(%InputClass% in) {
 
@@ -22,7 +22,7 @@ public class %TaskClass% {
     }
 
     Object solveBrute(%InputClass% in, StringBuilder sb) {
-        if (!isDevEnv) return null;
+        if (!lg.isDevEnv) return null;
         return null;
     }
 
