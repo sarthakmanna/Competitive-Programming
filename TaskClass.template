@@ -22,7 +22,7 @@ public class %TaskClass% {
     }
 
     Object solveBrute(%InputClass% in, StringBuilder sb) {
-        if (!lg.isDevEnv) return null;
+        if (!Logger.isDevEnv) return null;
         return null;
     }
 
