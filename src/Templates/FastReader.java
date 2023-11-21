@@ -1,6 +1,7 @@
 package Templates;
 
 import java.io.*;
+import java.util.ArrayList;
 
 public class FastReader {
     static final int BUFSIZE = 1 << 20;
@@ -85,5 +86,49 @@ public class FastReader {
         String[] ar = new String[size];
         for (int i = 0; i < size; ++i) ar[i] = next();
         return ar;
+    }
+
+    public ArrayList<Integer>[] getUndirectedTree(int N) {
+        return getUndirectedGraph(N, N - 1);
+    }
+
+    public ArrayList<Integer>[] getUndirectedGraph(int N, int M) {
+        return getUndirectedGraph(N, M, 1);
+    }
+
+    public ArrayList<Integer>[] getUndirectedGraph(int N, int M, int basedOffset) {
+        ArrayList<Integer>[] graph = initializeGraph(N);
+        for (int i = 0; i < M; ++i) {
+            int u = nextInt() - basedOffset, v = nextInt() - basedOffset;
+            graph[u].add(v);
+            graph[v].add(u);
+        }
+        return graph;
+    }
+
+    public ArrayList<Edge>[] getUndirectedWeightedTree(int N) {
+        return getUndirectedWeightedGraph(N, N - 1);
+    }
+
+    public ArrayList<Edge>[] getUndirectedWeightedGraph(int N, int M) {
+        return getUndirectedWeightedGraph(N, M, 1);
+    }
+
+    public ArrayList<Edge>[] getUndirectedWeightedGraph(int N, int M, int basedOffset) {
+        ArrayList<Edge>[] graph = initializeGraph(N);
+        for (int i = 0; i < M; ++i) {
+            int u = nextInt() - basedOffset, v = nextInt() - basedOffset;
+            long w = nextLong();
+            Edge edge = new Edge(u, v, w);
+            graph[u].add(edge);
+            graph[v].add(edge);
+        }
+        return graph;
+    }
+
+    private <T> ArrayList<T>[] initializeGraph(int N) {
+        ArrayList<T> graph[] = new ArrayList[N];
+        for (int i = 0; i < N; ++i) graph[i] = new ArrayList<>();
+        return graph;
     }
 }

@@ -19,12 +19,20 @@ public class HLD_LCA {
         return depth;
     }
 
+    public int getDepth(int node) {
+        return depth[node];
+    }
+
     public int[] getParent() {
         return parent;
     }
 
     public int[] getChCount() {
         return chCount;
+    }
+
+    public int getChCount(int node) {
+        return chCount[node];
     }
 
     public int[] getQueue() {
