@@ -31,6 +31,7 @@ public class PrefixSumArray {
     }
 
     public long query(int l, int r) {
+        if (l > r) return 0;
         precompute();
         long retValue = P[r];
         if (l > 0) retValue -= P[l - 1];
