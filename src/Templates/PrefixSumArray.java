@@ -14,6 +14,11 @@ public class PrefixSumArray {
         isReady = true;
     }
 
+    public PrefixSumArray(long[] A) {
+        this(A.length);
+        for (int i = 0; i < A.length; ++i) update(i, A[i]);
+    }
+
     public void precompute() {
         if (isReady) return;
         P[0] = A[0];
