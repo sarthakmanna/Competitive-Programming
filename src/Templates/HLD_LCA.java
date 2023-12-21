@@ -27,6 +27,10 @@ public class HLD_LCA {
         return parent;
     }
 
+    public int getParent(int node) {
+        return parent[node];
+    }
+
     public int[] getChCount() {
         return chCount;
     }
