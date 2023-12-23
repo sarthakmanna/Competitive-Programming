@@ -2,7 +2,7 @@ package Templates;
 
 import java.util.*;
 
-public class MyTreeMap implements Iterable<Map.Entry<Long, Long>> {
+public class MyTreeMap {
     static final long DUMMY_VALUE = -7;
     TreeMapNode root;
 
@@ -351,21 +351,20 @@ public class MyTreeMap implements Iterable<Map.Entry<Long, Long>> {
     private int itrInd;
     private ArrayList<TreeMapNode> dfsTrav = new ArrayList<>();
 
-    @Override
-    public Iterator<Map.Entry<Long, Long>> iterator() {
+    // !!!!! CAUTION: DO NOT MODIFY ANY NODE PARAMETERS !!!!!
+    Iterator<TreeMapNode> getIteratorOverNodes() {
         dfsTrav.clear();
         dfs(root);
         itrInd = 0;
-        Iterator<Map.Entry<Long, Long>> iterator = new Iterator<>() {
+        Iterator<TreeMapNode> iterator = new Iterator<>() {
             @Override
             public boolean hasNext() {
                 return itrInd < size();
             }
 
             @Override
-            public Map.Entry<Long, Long> next() {
-                TreeMapNode node = dfsTrav.get(itrInd++);
-                return new AbstractMap.SimpleEntry<>(node.key, node.value);
+            public TreeMapNode next() {
+                return dfsTrav.get(itrInd++);
             }
         };
         return iterator;

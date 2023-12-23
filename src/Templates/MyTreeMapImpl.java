@@ -10,8 +10,8 @@ public class MyTreeMapImpl extends MyTreeMap implements Map<Long, Long> {
 
     @Override
     public boolean containsValue(Object value) {
-        for (Map.Entry<Long, Long> itr : this) {
-            if (itr.getValue() == value) return true;
+        for (long itr : values()) {
+            if (itr == (long) value) return true;
         }
         return false;
     }
@@ -45,21 +45,21 @@ public class MyTreeMapImpl extends MyTreeMap implements Map<Long, Long> {
     @Override
     public Set<Long> keySet() {
         LinkedHashSet<Long> keys = new LinkedHashSet<>();
-        super.iterator().forEachRemaining(entry -> keys.add(entry.getKey()));
+        super.getIteratorOverNodes().forEachRemaining(node -> keys.add(node.key));
         return keys;
     }
 
     @Override
     public Collection<Long> values() {
         List<Long> values = new ArrayList<>();
-        super.iterator().forEachRemaining(entry -> values.add(entry.getValue()));
+        super.getIteratorOverNodes().forEachRemaining(node -> values.add(node.value));
         return values;
     }
 
     @Override
     public Set<Entry<Long, Long>> entrySet() {
         LinkedHashSet<Entry<Long, Long>> entries = new LinkedHashSet<>();
-        super.iterator().forEachRemaining(entry -> entries.add(entry));
+        super.getIteratorOverNodes().forEachRemaining(node -> entries.add(new AbstractMap.SimpleEntry<>(node.key, node.value)));
         return entries;
     }
 }
