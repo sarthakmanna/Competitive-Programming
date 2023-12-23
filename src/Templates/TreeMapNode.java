@@ -1,16 +1,17 @@
 package Templates;
 
-public class TreeSetNode {
-    TreeSetNode parent, left, right;
-    long value, sum;
+public class TreeMapNode implements Comparable<TreeMapNode> {
+    TreeMapNode parent, left, right;
+    long key, val, sum;
     int size, height;
 
-    TreeSetNode(long v) {
-        sum = value = v;
+    TreeMapNode(long k, long v) {
+        sum = key = k;
+        val = v;
         size = height = 1;
     }
 
-    TreeSetNode finalisePosition(TreeSetNode root) {
+    TreeMapNode finalisePosition(TreeMapNode root) {
         int lheight = findDepth(left), rheight = findDepth(right);
 
         if (lheight > rheight + 1) {
@@ -28,8 +29,8 @@ public class TreeSetNode {
         return root;
     }
 
-    TreeSetNode rotateRight(TreeSetNode root) {
-        TreeSetNode A = this, B = left, P = parent;
+    TreeMapNode rotateRight(TreeMapNode root) {
+        TreeMapNode A = this, B = left, P = parent;
 
         if (P != null) {
             if (P.left == this) P.left = B;
@@ -49,8 +50,8 @@ public class TreeSetNode {
         return root;
     }
 
-    TreeSetNode rotateLeft(TreeSetNode root) {
-        TreeSetNode A = this, B = right, P = parent;
+    TreeMapNode rotateLeft(TreeMapNode root) {
+        TreeMapNode A = this, B = right, P = parent;
 
         if (P != null) {
             if (P.left == this) P.left = B;
@@ -71,7 +72,7 @@ public class TreeSetNode {
     }
 
     void setParameters() {
-        sum = value + findSum(left) + findSum(right);
+        sum = key + findSum(left) + findSum(right);
         size = 1 + findSize(left) + findSize(right);
         height = 1 + Math.max(findDepth(left), findDepth(right));
     }
@@ -84,23 +85,23 @@ public class TreeSetNode {
         return sum;
     }
 
-    static int findDepth(TreeSetNode node) {
+    static int findDepth(TreeMapNode node) {
         return node == null ? 0 : node.height;
     }
 
-    static int findSize(TreeSetNode node) {
+    static int findSize(TreeMapNode node) {
         return node == null ? 0 : node.size();
     }
 
-    static long findSum(TreeSetNode node) {
+    static long findSum(TreeMapNode node) {
         return node == null ? 0 : node.getSum();
     }
 
-    public int compareTo(TreeSetNode node) {
-        return Long.compare(value, node.value);
+    public int compareTo(TreeMapNode node) {
+        return Long.compare(key, node.key);
     }
 
     public String toString() {
-        return value + "";
+        return "(" + key + "," + val + ")";
     }
 }
