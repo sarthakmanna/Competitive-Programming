@@ -32,12 +32,12 @@ public class MyTreeMap implements Iterable<Map.Entry<Long, Long>> {
     public boolean remove(long key) {
         TreeMapNode actual = new TreeMapNode(key, DUMMY_VALUE), toRemove = floor(actual);
         if (toRemove.compareTo(actual) != 0) return false;
-        return remove(toRemove);
+        return removeKey(toRemove);
     }
 
     public boolean pollAtIndex(int index) {
         if (index < 0 || index >= size()) return false;
-        else return remove(navigateTo(root, index));
+        else return removeKey(navigateTo(root, index));
     }
 
     public boolean containsKey(long key) {
@@ -181,7 +181,7 @@ public class MyTreeMap implements Iterable<Map.Entry<Long, Long>> {
         return true;
     }
 
-    private boolean remove(TreeMapNode node) {
+    private boolean removeKey(TreeMapNode node) {
         if (root.size() == 1) {
             root = null;
             return true;
