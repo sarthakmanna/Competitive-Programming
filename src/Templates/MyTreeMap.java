@@ -45,6 +45,18 @@ public class MyTreeMap implements Iterable<Map.Entry<Long, Long>> {
         return fl != null && fl.key == key;
     }
 
+    public long get(long key) {
+        TreeMapNode fl = floor(new TreeMapNode(key, DUMMY_VALUE));
+        if (fl.key != key) return 7 / 0;
+        else return fl.value;
+    }
+
+    public long getOrDefault(long key, long defaultValue) {
+        TreeMapNode fl = floor(new TreeMapNode(key, DUMMY_VALUE));
+        if (fl.key != key) return defaultValue;
+        else return fl.value;
+    }
+
     public long floorKey(long key) {
         return floor(new TreeMapNode(key, DUMMY_VALUE)).key;
     }
@@ -81,12 +93,12 @@ public class MyTreeMap implements Iterable<Map.Entry<Long, Long>> {
         return new AbstractMap.SimpleEntry<>(higherNode.key, higherNode.value);
     }
 
-    public long elementAtIndex(int index) {
+    public long keyAtIndex(int index) {
         if (index < 0 || index >= size()) return 7 / 0;
         else return navigateTo(root, index).key;
     }
 
-    public Map.Entry<Long, Long> pairAtIndex(int index) {
+    public Map.Entry<Long, Long> elementAtIndex(int index) {
         if (index < 0 || index >= size()) return null;
         TreeMapNode node = navigateTo(root, index);
         return new AbstractMap.SimpleEntry<>(node.key, node.value);
