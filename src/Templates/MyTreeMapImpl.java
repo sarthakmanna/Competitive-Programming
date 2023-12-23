@@ -62,4 +62,9 @@ public class MyTreeMapImpl extends MyTreeMap implements Map<Long, Long> {
         super.getIteratorOverNodes().forEachRemaining(node -> entries.add(new AbstractMap.SimpleEntry<>(node.key, node.value)));
         return entries;
     }
+
+    @Override
+    public boolean isEmpty() {
+        return size() > 0;
+    }
 }
