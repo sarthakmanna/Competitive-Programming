@@ -22,7 +22,11 @@ public class MyTreeMap implements Iterable<Map.Entry<Long, Long>> {
     }
 
     public boolean add(long key) {
-        return add(new TreeMapNode(key, DUMMY_VALUE));
+        return put(key, DUMMY_VALUE);
+    }
+
+    public boolean put(long key, long value) {
+        return add(new TreeMapNode(key, value));
     }
 
     public boolean remove(long key) {
@@ -36,30 +40,56 @@ public class MyTreeMap implements Iterable<Map.Entry<Long, Long>> {
         else return remove(navigateTo(root, index));
     }
 
-    public boolean contains(long key) {
+    public boolean containsKey(long key) {
         TreeMapNode fl = floor(new TreeMapNode(key, DUMMY_VALUE));
         return fl != null && fl.key == key;
     }
 
-    public long floor(long key) {
+    public long floorKey(long key) {
         return floor(new TreeMapNode(key, DUMMY_VALUE)).key;
     }
 
-    public long ceiling(long key) {
+    public Map.Entry<Long, Long> floor(long key) {
+        TreeMapNode floorNode = floor(new TreeMapNode(key, DUMMY_VALUE));
+        return new AbstractMap.SimpleEntry<>(floorNode.key, floorNode.value);
+    }
+
+    public long ceilingKey(long key) {
         return ceiling(new TreeMapNode(key, DUMMY_VALUE)).key;
     }
 
-    public long lower(long key) {
+    public Map.Entry<Long, Long> ceiling(long key) {
+        TreeMapNode ceilingNode = ceiling(new TreeMapNode(key, DUMMY_VALUE));
+        return new AbstractMap.SimpleEntry<>(ceilingNode.key, ceilingNode.value);
+    }
+
+    public long lowerKey(long key) {
         return lower(new TreeMapNode(key, DUMMY_VALUE)).key;
     }
 
-    public long higher(long key) {
+    public Map.Entry<Long, Long> lower(long key) {
+        TreeMapNode lowerNode = lower(new TreeMapNode(key, DUMMY_VALUE));
+        return new AbstractMap.SimpleEntry<>(lowerNode.key, lowerNode.value);
+    }
+
+    public long higherKey(long key) {
         return higher(new TreeMapNode(key, DUMMY_VALUE)).key;
+    }
+
+    public Map.Entry<Long, Long> higher(long key) {
+        TreeMapNode higherNode = higher(new TreeMapNode(key, DUMMY_VALUE));
+        return new AbstractMap.SimpleEntry<>(higherNode.key, higherNode.value);
     }
 
     public long elementAtIndex(int index) {
         if (index < 0 || index >= size()) return 7 / 0;
         else return navigateTo(root, index).key;
+    }
+
+    public Map.Entry<Long, Long> pairAtIndex(int index) {
+        if (index < 0 || index >= size()) return null;
+        TreeMapNode node = navigateTo(root, index);
+        return new AbstractMap.SimpleEntry<>(node.key, node.value);
     }
 
     public int countFloorNodes(long key) {
@@ -78,22 +108,30 @@ public class MyTreeMap implements Iterable<Map.Entry<Long, Long>> {
         return size() == 0;
     }
 
-    public long first() {
+    public long firstKey() {
+        return ceiling(Long.MIN_VALUE).getKey();
+    }
+
+    public Map.Entry<Long, Long> first() {
         return ceiling(Long.MIN_VALUE);
     }
 
-    public long last() {
+    public long lastKey() {
+        return floor(Long.MAX_VALUE).getKey();
+    }
+
+    public Map.Entry<Long, Long> last() {
         return floor(Long.MAX_VALUE);
     }
 
     public long pollFirst() {
-        long temp = first();
+        long temp = firstKey();
         remove(temp);
         return temp;
     }
 
     public long pollLast() {
-        long temp = last();
+        long temp = lastKey();
         remove(temp);
         return temp;
     }
@@ -118,7 +156,10 @@ public class MyTreeMap implements Iterable<Map.Entry<Long, Long>> {
                     toAdd.parent = tr;
                     break;
                 } else tr = tr.right;
-            } else return false;
+            } else {
+                tr.value = toAdd.value;
+                return false;
+            }
         }
 
         while (toAdd != null) {
@@ -312,7 +353,7 @@ public class MyTreeMap implements Iterable<Map.Entry<Long, Long>> {
             @Override
             public Map.Entry<Long, Long> next() {
                 TreeMapNode node = dfsTrav.get(itrInd++);
-                return new AbstractMap.SimpleEntry<>(node.key, node.val);
+                return new AbstractMap.SimpleEntry<>(node.key, node.value);
             }
         };
         return iterator;
@@ -325,6 +366,7 @@ public class MyTreeMap implements Iterable<Map.Entry<Long, Long>> {
         dfs(node.right);
     }
 
+    @Override
     public String toString() {
         dfsTrav.clear();
         dfs(root);

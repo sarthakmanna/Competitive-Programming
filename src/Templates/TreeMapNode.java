@@ -2,12 +2,12 @@ package Templates;
 
 public class TreeMapNode implements Comparable<TreeMapNode> {
     TreeMapNode parent, left, right;
-    long key, val, sum;
+    long key, value, sum;
     int size, height;
 
     TreeMapNode(long k, long v) {
         sum = key = k;
-        val = v;
+        value = v;
         size = height = 1;
     }
 
@@ -102,6 +102,6 @@ public class TreeMapNode implements Comparable<TreeMapNode> {
     }
 
     public String toString() {
-        return "(" + key + "," + val + ")";
+        return "(" + key + "," + value + ")";
     }
 }
