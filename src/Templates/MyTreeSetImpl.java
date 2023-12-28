@@ -3,6 +3,14 @@ package Templates;
 import java.util.*;
 
 public class MyTreeSetImpl extends MyTreeMap implements Set<Long> {
+    public MyTreeSetImpl() {
+        super();
+    }
+
+    public MyTreeSetImpl(boolean allowDupli) {
+        super(allowDupli);
+    }
+
     @Override
     public boolean contains(Object o) {
         return super.containsKey((long) o);

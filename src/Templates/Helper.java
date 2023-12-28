@@ -352,6 +352,30 @@ public class Helper {
         }
     }
 
+    public void shuffle(Integer[] ar) {
+        int r;
+        for (int i = 0; i < ar.length; ++i) {
+            r = rnd.nextInt(ar.length);
+            if (r != i) {
+                int temp = ar[i];
+                ar[i] = ar[r];
+                ar[r] = temp;
+            }
+        }
+    }
+
+    public void shuffle(Long[] ar) {
+        int r;
+        for (int i = 0; i < ar.length; ++i) {
+            r = rnd.nextInt(ar.length);
+            if (r != i) {
+                long temp = ar[i];
+                ar[i] = ar[r];
+                ar[r] = temp;
+            }
+        }
+    }
+
     public void reverse(int[] ar) {
         int r;
         for (int i = 0; i < ar.length; ++i) {

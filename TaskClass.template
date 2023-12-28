@@ -4,8 +4,7 @@ import java.io.*;
 import java.util.*;
 import java.math.*;
 
-import Templates.Helper;
-import Templates.Logger;
+import Templates.*;
 import %InputClassFQN%;
 import %OutputClassFQN%;
 
