@@ -31,7 +31,7 @@ public class MyTreeMap {
 
     public boolean remove(long key) {
         TreeMapNode actual = new TreeMapNode(key, DUMMY_VALUE), toRemove = floor(actual);
-        if (toRemove.compareTo(actual) != 0) return false;
+        if (toRemove == null || toRemove.compareTo(actual) != 0) return false;
         return removeKey(toRemove);
     }
 
