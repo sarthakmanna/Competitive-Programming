@@ -28,6 +28,11 @@ public class %TaskClass% {
     public void solve(int testNumber, %InputClass% in, %OutputClass% out) {
         // out.print("Case #" + testNumber + ": ");
 
+        // new Thread(null, new Runnable() {
+        //     @Override
+        //     public void run() { /* do stuff */ }
+        // }, "Solver", 1l << 30).start();
+
         fillInputParams(in);
         Object outOptimised = solveOptimised(in, new StringBuilder());
         Object outBrute = solveBrute(in, new StringBuilder());
