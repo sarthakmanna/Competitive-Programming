@@ -65,6 +65,6 @@ public class MyTreeMapImpl extends MyTreeMap implements Map<Long, Long> {
 
     @Override
     public boolean isEmpty() {
-        return size() > 0;
+        return size() == 0;
     }
 }
