@@ -11,12 +11,21 @@ public class MyTreeSetImpl extends MyTreeMap implements Set<Long> {
         super(allowDupli);
     }
 
+    public MyTreeSetImpl(Comparator<Long> com) {
+        super(com);
+    }
+
+    public MyTreeSetImpl(boolean allowDupli, Comparator<Long> com) {
+        super(allowDupli, com);
+    }
+
     @Override
     public boolean contains(Object o) {
         return super.containsKey((long) o);
     }
 
     private int index;
+
     @Override
     public Object[] toArray() {
         Object[] ret = new Object[super.size()];
@@ -41,6 +50,7 @@ public class MyTreeSetImpl extends MyTreeMap implements Set<Long> {
     }
 
     private boolean containsAll;
+
     @Override
     public boolean containsAll(Collection<?> c) {
         containsAll = true;
@@ -49,6 +59,7 @@ public class MyTreeSetImpl extends MyTreeMap implements Set<Long> {
     }
 
     private boolean addAll;
+
     @Override
     public boolean addAll(Collection<? extends Long> c) {
         addAll = false;
@@ -69,6 +80,7 @@ public class MyTreeSetImpl extends MyTreeMap implements Set<Long> {
     }
 
     private boolean removeAll;
+
     @Override
     public boolean removeAll(Collection<?> c) {
         removeAll = false;
@@ -99,6 +111,6 @@ public class MyTreeSetImpl extends MyTreeMap implements Set<Long> {
 
     @Override
     public boolean isEmpty() {
-        return size() > 0;
+        return size() == 0;
     }
 }

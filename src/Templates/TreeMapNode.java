@@ -1,14 +1,18 @@
 package Templates;
 
+import java.util.Comparator;
+
 public class TreeMapNode implements Comparable<TreeMapNode> {
     TreeMapNode parent, left, right;
     long key, value, sum;
     int size, height;
+    Comparator<Long> comparator;
 
-    TreeMapNode(long k, long v) {
+    TreeMapNode(long k, long v, Comparator<Long> com) {
         sum = key = k;
         value = v;
         size = height = 1;
+        comparator = com;
     }
 
     TreeMapNode finalisePosition(TreeMapNode root) {
@@ -98,7 +102,7 @@ public class TreeMapNode implements Comparable<TreeMapNode> {
     }
 
     public int compareTo(TreeMapNode node) {
-        return Long.compare(key, node.key);
+        return comparator.compare(key, node.key);
     }
 
     public String toString() {

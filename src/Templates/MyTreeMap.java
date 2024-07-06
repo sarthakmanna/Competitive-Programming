@@ -1,16 +1,15 @@
 package Templates;
 
+import com.sun.source.tree.Tree;
+
 import java.util.*;
 
 public class MyTreeMap {
     static final long DUMMY_VALUE = -7;
     TreeMapNode root;
+    Comparator<Long> comparator = Comparator.comparingLong(Long::longValue);
 
-    public boolean isAllowDuplicates() {
-        return allowDuplicates;
-    }
-
-    boolean allowDuplicates;
+    boolean allowDuplicates = false;
 
     public MyTreeMap() {
         root = null;
@@ -21,16 +20,27 @@ public class MyTreeMap {
         allowDuplicates = allowDupli;
     }
 
+    public MyTreeMap(Comparator<Long> com) {
+        root = null;
+        comparator = com;
+    }
+
+    public MyTreeMap(boolean allowDupli, Comparator<Long> com) {
+        root = null;
+        allowDuplicates = allowDupli;
+        comparator = com;
+    }
+
     public boolean add(long key) {
         return put(key, DUMMY_VALUE);
     }
 
     public boolean put(long key, long value) {
-        return add(new TreeMapNode(key, value));
+        return add(new TreeMapNode(key, value, comparator));
     }
 
     public boolean remove(long key) {
-        TreeMapNode actual = new TreeMapNode(key, DUMMY_VALUE), toRemove = floor(actual);
+        TreeMapNode actual = new TreeMapNode(key, DUMMY_VALUE, comparator), toRemove = floor(actual);
         if (toRemove == null || toRemove.compareTo(actual) != 0) return false;
         return removeKey(toRemove);
     }
@@ -41,55 +51,55 @@ public class MyTreeMap {
     }
 
     public boolean containsKey(long key) {
-        TreeMapNode fl = floor(new TreeMapNode(key, DUMMY_VALUE));
+        TreeMapNode fl = floor(new TreeMapNode(key, DUMMY_VALUE, comparator));
         return fl != null && fl.key == key;
     }
 
     public long get(long key) {
-        TreeMapNode fl = floor(new TreeMapNode(key, DUMMY_VALUE));
+        TreeMapNode fl = floor(new TreeMapNode(key, DUMMY_VALUE, comparator));
         if (fl.key != key) return 7 / 0;
         else return fl.value;
     }
 
     public long getOrDefault(long key, long defaultValue) {
-        TreeMapNode fl = floor(new TreeMapNode(key, DUMMY_VALUE));
+        TreeMapNode fl = floor(new TreeMapNode(key, DUMMY_VALUE, comparator));
         if (fl.key != key) return defaultValue;
         else return fl.value;
     }
 
     public long floorKey(long key) {
-        return floor(new TreeMapNode(key, DUMMY_VALUE)).key;
+        return floor(new TreeMapNode(key, DUMMY_VALUE, comparator)).key;
     }
 
     public Map.Entry<Long, Long> floor(long key) {
-        TreeMapNode floorNode = floor(new TreeMapNode(key, DUMMY_VALUE));
+        TreeMapNode floorNode = floor(new TreeMapNode(key, DUMMY_VALUE, comparator));
         return new AbstractMap.SimpleEntry<>(floorNode.key, floorNode.value);
     }
 
     public long ceilingKey(long key) {
-        return ceiling(new TreeMapNode(key, DUMMY_VALUE)).key;
+        return ceiling(new TreeMapNode(key, DUMMY_VALUE, comparator)).key;
     }
 
     public Map.Entry<Long, Long> ceiling(long key) {
-        TreeMapNode ceilingNode = ceiling(new TreeMapNode(key, DUMMY_VALUE));
+        TreeMapNode ceilingNode = ceiling(new TreeMapNode(key, DUMMY_VALUE, comparator));
         return new AbstractMap.SimpleEntry<>(ceilingNode.key, ceilingNode.value);
     }
 
     public long lowerKey(long key) {
-        return lower(new TreeMapNode(key, DUMMY_VALUE)).key;
+        return lower(new TreeMapNode(key, DUMMY_VALUE, comparator)).key;
     }
 
     public Map.Entry<Long, Long> lower(long key) {
-        TreeMapNode lowerNode = lower(new TreeMapNode(key, DUMMY_VALUE));
+        TreeMapNode lowerNode = lower(new TreeMapNode(key, DUMMY_VALUE, comparator));
         return new AbstractMap.SimpleEntry<>(lowerNode.key, lowerNode.value);
     }
 
     public long higherKey(long key) {
-        return higher(new TreeMapNode(key, DUMMY_VALUE)).key;
+        return higher(new TreeMapNode(key, DUMMY_VALUE, comparator)).key;
     }
 
     public Map.Entry<Long, Long> higher(long key) {
-        TreeMapNode higherNode = higher(new TreeMapNode(key, DUMMY_VALUE));
+        TreeMapNode higherNode = higher(new TreeMapNode(key, DUMMY_VALUE, comparator));
         return new AbstractMap.SimpleEntry<>(higherNode.key, higherNode.value);
     }
 
@@ -98,18 +108,18 @@ public class MyTreeMap {
         else return navigateTo(root, index).key;
     }
 
-    public Map.Entry<Long, Long> elementAtIndex(int index) {
+    public Map.Entry<Long, Long> entryAtIndex(int index) {
         if (index < 0 || index >= size()) return null;
         TreeMapNode node = navigateTo(root, index);
         return new AbstractMap.SimpleEntry<>(node.key, node.value);
     }
 
     public int countFloorNodes(long key) {
-        return countFloorNodes(root, new TreeMapNode(key, DUMMY_VALUE));
+        return countFloorNodes(root, new TreeMapNode(key, DUMMY_VALUE, comparator));
     }
 
     public long sumUpFloorNodes(long key) {
-        return sumUpFloorNodes(root, new TreeMapNode(key, DUMMY_VALUE));
+        return sumUpFloorNodes(root, new TreeMapNode(key, DUMMY_VALUE, comparator));
     }
 
     public int size() {
@@ -121,19 +131,21 @@ public class MyTreeMap {
     }
 
     public long firstKey() {
-        return ceiling(Long.MIN_VALUE).getKey();
+        return firstTreeNode().key;
     }
 
     public Map.Entry<Long, Long> first() {
-        return ceiling(Long.MIN_VALUE);
+        TreeMapNode firstNode = firstTreeNode();
+        return new AbstractMap.SimpleEntry<>(firstNode.key, firstNode.value);
     }
 
     public long lastKey() {
-        return floor(Long.MAX_VALUE).getKey();
+        return lastTreeNode().key;
     }
 
     public Map.Entry<Long, Long> last() {
-        return floor(Long.MAX_VALUE);
+        TreeMapNode lastNode = lastTreeNode();
+        return new AbstractMap.SimpleEntry<>(lastNode.key, lastNode.value);
     }
 
     public long pollFirst() {
@@ -346,6 +358,18 @@ public class MyTreeMap {
             else if (parent.left == node) return parent;
             else node = parent;
         }
+    }
+
+    private TreeMapNode firstTreeNode() {
+        TreeMapNode curr = root;
+        while (curr.left != null) curr = curr.left;
+        return curr;
+    }
+
+    private TreeMapNode lastTreeNode() {
+        TreeMapNode curr = root;
+        while (curr.right != null) curr = curr.right;
+        return curr;
     }
 
     private int itrInd;

@@ -126,7 +126,7 @@ public class FastReader {
         return graph;
     }
 
-    private <T> ArrayList<T>[] initializeGraph(int N) {
+    public <T> ArrayList<T>[] initializeGraph(int N) {
         ArrayList<T> graph[] = new ArrayList[N];
         for (int i = 0; i < N; ++i) graph[i] = new ArrayList<>();
         return graph;
